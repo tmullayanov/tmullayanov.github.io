@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ section.title }}</h1>
+
+{% for page in section.pages %}
+<div class="post-card">
+    <div class="title">
+        <a href="{{ page.permalink }}">{{ page.title }}</a>
+    </div>
+    <div class="meta">
+        {{ page.date | date(format="%Y-%m-%d") }}
+    </div>
+    <p>{{ page.summary }}</p>
+</div>
+{% endfor %}
+
+{% endblock content %}

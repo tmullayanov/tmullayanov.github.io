@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Mind Debug</h1>
+
+{% for page in paginator.pages %}
+<div class="post-card">
+    <div class="title">
+        <a href="{{ page.permalink }}">{{ page.title }}</a>
+    </div>
+    <div class="meta">
+        {{ page.date | date(format="%Y-%m-%d") }}
+        {% if page.taxonomies.tags %}
+            — {{ page.taxonomies.tags | join(sep=", ") }}
+        {% endif %}
+    </div>
+    <p>{{ page.summary }}</p>
+</div>
+{% endfor %}
+
+{% if paginator.previous %}
+    <a href="{{ paginator.previous }}">← Newer</a>
+{% endif %}
+&nbsp;
+{% if paginator.next %}
+    <a href="{{ paginator.next }}">Older →</a>
+{% endif %}
+
+{% endblock content %}
