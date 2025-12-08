@@ -86,7 +86,7 @@ code, pre, kbd, .logo, h1, h2, h3, h4, h5, .post-title {
 
 /* ================== Контейнер ================== */
 .container {
-  max-width: 760px;
+  max-width: 960px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
@@ -96,6 +96,7 @@ code, pre, kbd, .logo, h1, h2, h3, h4, h5, .post-title {
   padding: 1.5rem 0;
   border-bottom: 1px solid var(--border);
   position: sticky;
+  flex-direction: row;
   top: 0;
   backdrop-filter: blur(12px);
   background: rgba(13, 10, 31, 0.88);
@@ -160,21 +161,6 @@ code, pre, kbd, .logo, h1, h2, h3, h4, h5, .post-title {
 .light .icon-sun { display: block; }
 
 /* Поиск */
-.search-wrapper { position: relative; margin-left: 1rem; }
-#search-input {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  width: 220px;
-  outline: none;
-  transition: var(--transition);
-}
-#search-input:focus {
-  border-color: var(--cyan);
-  box-shadow: var(--glow-cyan);
-}
 
 /* ================== Главная (hero) ================== */
 .hero {
@@ -298,5 +284,4 @@ code, pre, kbd, .logo, h1, h2, h3, h4, h5, .post-title {
 @media (max-width: 768px) {
   .site-header .container { flex-direction: column; }
   .hero h1 { font-size: 3.8rem; }
-  #search-input { width: 100%; }
 }
