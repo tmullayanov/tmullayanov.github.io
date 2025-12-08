@@ -11,7 +11,7 @@
     <div class="meta">
         {{ page.date | date(format="%Y-%m-%d") }}
     </div>
-    <p>{{ page.summary }}</p>
+    <p>{{ page.summary | safe }}</p>
 </div>
 {% endfor %}
 
