@@ -1,51 +1,58 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{% if page.title %}{{ page.title }} · {% endif %}Mind Debug</title>
-  
-  <link rel="stylesheet" href="{{ get_url(path='main.css') }}">
-  
-  <script src="{{ get_url(path='theme.js') }}"></script>
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}Личные эссе и мысли о софте, книгах и жизни{% endif %}" />
+
+  <link rel="stylesheet" href="{{ get_url(path="main.css") }}" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <script src="{{ get_url(path="theme.js") }}" defer></script>
 </head>
 
 <body>
-  <header>
-    <div class="container">
-      <button id="theme-toggle">
-        Light/Dark
-      </button>
-      <nav>
-        <a href="{{ config.base_url }}/">Home</a>
-        <a href="{{ config.base_url }}/essays/">Essays</a>
-        <a href="{{ config.base_url }}/se/">Software Engineering</a>
-        <a href="{{ config.base_url }}/reading/">Reading</a>
-        <a href="{{ config.base_url }}/misc/">Misc</a>
-        <a href="{{ config.base_url }}/tags/">Tags</a>
-      </nav>
+  <div class="page-wrapper">
+    <header class="site-header">
+      <div class="container">
+        <div class="header-left">
+          <a href="{{ config.base_url }}/" class="logo">Mind Debug</a>
+        </div>
 
-      <input id="search-input" type="text" placeholder="Search..." style="
-  width: 200px;
-  padding: 6px 10px;
-  background: var(--bg-light);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  margin-left: 1rem;
-">
-      <div id="search-results"></div>
-    </div>
-  </header>
+        <nav class="site-nav">
+          <a href="{{ config.base_url }}/essays/">Эссе</a>
+          <a href="{{ config.base_url }}/se/">Software Engineering</a>
+          <a href="{{ config.base_url }}/reading/">Читаю</a>
+          <a href="{{ config.base_url }}/misc/">Разное</a>
+          <a href="{{ config.base_url }}/tags/">Теги</a>
+        </nav>
 
-  <div class="container">
-    {% block content %}{% endblock %}
+        <div class="header-right">
+          <button id="theme-toggle" aria-label="Переключить тему">
+            <span class="icon-sun">☀</span>
+            <span class="icon-moon">☾</span>
+          </button>
+
+          <div class="search-wrapper">
+            <input id="search-input" type="text" placeholder="Поиск…" autocomplete="off">
+            <div id="search-results" class="search-results"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container content">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© {{ now() | date(format="%Y") }} Mind Debug. Все права не защищены.</p>
+      </div>
+    </footer>
   </div>
-
-  <footer>
-    Mind Debug © {{ now() | date(format="%Y") }}
-  </footer>
-
 </body>
-
 </html>
