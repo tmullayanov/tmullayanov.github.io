@@ -1,24 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <title>{% if page.title %}{{ page.title }} · {% endif %}Mind Debug</title>
-    <link rel="stylesheet" href="{{ get_url(path='main.css') }}">
+  <meta charset="utf-8" />
+  <title>{% if page.title %}{{ page.title }} · {% endif %}Mind Debug</title>
+  <link rel="stylesheet" href="{{ get_url(path='main.css') }}">
+  <script src="{{ get_url(path='theme.js') }}"></script>
 </head>
 
 <body>
-<header>
+  <header>
     <div class="container">
-        <nav>
-            <a href="{{ config.base_url }}/">Home</a>
-            <a href="{{ config.base_url }}/essays">Essays</a>
-            <a href="{{ config.base_url }}/se">Software Engineering</a>
-            <a href="{{ config.base_url }}/reading">Reading</a>
-            <a href="{{ config.base_url }}/misc">Misc</a>
-            <a href="{{ config.base_url }}/tags/">Tags</a>
-        </nav>
+      <button id="theme-toggle">
+        Light/Dark
+      </button>
+      <nav>
+        <a href="{{ config.base_url }}/">Home</a>
+        <a href="{{ config.base_url }}/essays/">Essays</a>
+        <a href="{{ config.base_url }}/se/">Software Engineering</a>
+        <a href="{{ config.base_url }}/reading/">Reading</a>
+        <a href="{{ config.base_url }}/misc/">Misc</a>
+        <a href="{{ config.base_url }}/tags/">Tags</a>
+      </nav>
 
-        <input id="search-input" type="text" placeholder="Search..." style="
+      <input id="search-input" type="text" placeholder="Search..." style="
   width: 200px;
   padding: 6px 10px;
   background: var(--bg-light);
@@ -27,17 +32,18 @@
   border-radius: 6px;
   margin-left: 1rem;
 ">
-<div id="search-results"></div>
+      <div id="search-results"></div>
     </div>
-</header>
+  </header>
 
-<div class="container">
+  <div class="container">
     {% block content %}{% endblock %}
-</div>
+  </div>
 
-<footer>
+  <footer>
     Mind Debug © {{ now() | date(format="%Y") }}
-</footer>
+  </footer>
 
 </body>
+
 </html>
