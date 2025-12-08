@@ -18,6 +18,7 @@
 
 {# Сортируем по дате — новые сверху #}
 {% set_global all_posts = all_posts | sort(attribute="date") | reverse %}
+
 <div class="post-list">
     <h1 class="title">Все посты</h1>
 
@@ -29,9 +30,15 @@
             <h2>{{ post.title }}</h2>
         </a>
         <small>{{ post.date | date(format="%Y-%m-%d") }}</small>
+        <br />
 
-        {% if post.summary %}
-        <p>{{ post.summary }}</p>
+        {% if post.summary %}{{ post.summary }}{% endif %}
+
+        {% if post.taxonomies.tags %}
+        <p>Tags:
+            {% for tag in post.taxonomies.tags %}
+                <a href="{{ config.base_url }}/tags/{{ tag }}/">{{ tag }}</a>{% if not loop.last %}, {% endif %}
+            {% endfor %}
         {% endif %}
     </article>
     </li>    
