@@ -1,6 +1,6 @@
 +++
 title = "Ниагарский поток Роббинса"
-date = 2025-02-12
+date = 2025-12-08
 [taxonomies]
 tags = ["psychology", "self-dev"]
 +++
