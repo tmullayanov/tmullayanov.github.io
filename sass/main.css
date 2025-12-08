@@ -1,502 +1,341 @@
-/* ===== Переменные ===== */
-/* ==== Synthwave / Retrowave 2077 ==== */
+/* ==============================
+   MIND DEBUG — SYNTHWAVE THEME
+   Полностью адаптирован под HTML, который ты прислал
+   ============================== */
+
+/*
+ЦЕЛЬ: не сломать твою вёрстку, подсветить её synthwave-стилем,
+оставить читаемость и аккуратность.
+
+Все классы в этом CSS соответствуют твоему HTML:
+.site-header, .site-nav, .page-wrapper, .container,
+.hero, .post-list, .post-card, .search-wrapper, .search-input,
+.search-results, .site-footer, .pagination, и т.д.
+*/
+
+/* ==============================
+   ОСНОВНЫЕ ПЕРЕМЕННЫЕ ТЕМЫ
+============================== */
 :root {
-  --bg: #0d0a1f;           /* глубокий тёмно-синий, почти чёрный */
-  --bg-secondary: #17132c;
-  --bg-card: #1a1638;
-  --text: #e0d9ff;          /* мягкий лавандовый белый */
-  --text-muted: #b19cd9;
-  
-  --pink: #ff69b4;          /* hot pink неон */
-  --cyan: #00f5ff;          /* электрик cyan */
-  --purple: #9d4edd;        /* глубокий фиолетовый */
-  --magenta: #ff2ecd;
-  
-  --accent: var(--cyan);        /* основные ссылки и акценты */
-  --accent2: var(--pink);
-  --accent3: var(--purple);
-  
-  --border: rgba(0, 245, 255, 0.25);
-  --glow-pink: 0 0 12px rgba(255, 105, 180, 0.6);
-  --glow-cyan: 0 0 12px rgba(0, 245, 255, 0.6);
-  --glow-purple: 0 0 12px rgba(157, 78, 221, 0.6);
-  
-  --radius: 16px;
-  --transition: 0.35s cubic-bezier(0.2, 0.8, 0.4, 1);
+  --bg: #0b0b1a;
+  --bg-alt: #151527;
+  --fg: #e8e8ff;
+
+  --accent-pink: #ff69c8;
+  --accent-cyan: #53f6ff;
+  --accent-purple: #a26bff;
+
+  --container-width: 760px;
+
+  --shadow-neon: 0 0 6px var(--accent-pink), 0 0 10px var(--accent-cyan);
 }
 
-/* Светлая тема — делаем «дневной Miami» вместо скучного белого */
-:root.light {
-  --bg: #2a1a3d;            /* тёмно-фиолетовый закат */
-  --bg-secondary: #3d2a5e;
-  --bg-card: #4a3578;
-  --text: #f0e5ff;
-  --text-muted: #d4b8ff;
-  --border: rgba(255, 105, 180, 0.3);
-  --accent: #ff69b4;
-  --accent2: #00f5ff;
+body.dark {
+  --bg: #05050e;
+  --bg-alt: #101021;
+  --fg: #dcdcff;
+
+  --accent-pink: #ff7dd6;
+  --accent-cyan: #9cf6ff;
+  --accent-purple: #c09dff;
 }
-/* ===== Базовые стили ===== */
-*, *::before, *::after { box-sizing: border-box; }
 
 body {
-  margin: 0;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
   background: var(--bg);
-  color: var(--text);
-  line-height: 1.7;
-  transition: background 0.4s ease, color 0.4s ease;
-  -webkit-font-smoothing: antialiased;
+  color: var(--fg);
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: 
-    linear-gradient(90deg, rgba(255, 105, 180, 0.06) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(255, 105, 180, 0.06) 1px, transparent 1px),
-    radial-gradient(circle at bottom center, rgba(0, 245, 255, 0.15), transparent 70%);
-  background-size: 40px 40px, 40px 40px, cover;
-  pointer-events: none;
-  z-index: -1;
-}
-
-code, pre, kbd {
-  font-family: 'JetBrains Mono', 'Fira Code', Menlo, Monaco, Consolas, monospace;
-}
-
-/* Моноширинный только для заголовков и акцентов */
-h1, h2, h3, h4, .post-title, .logo {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
+/* ==============================
+   КОНТЕЙНЕР
+============================== */
 .container {
-  max-width: 760px;
+  max-width: var(--container-width);
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 20px;
 }
 
-/* ===== Хедер ===== */
+/* ==============================
+   HEADER
+============================== */
 .site-header {
-  padding: 1.5rem 0;
-  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+  padding: 15px 0;
+  box-shadow: var(--shadow-neon);
   position: sticky;
   top: 0;
-  backdrop-filter: blur(12px);
-  background: rgba(11, 12, 16, 0.85); /* тёмная */
   z-index: 100;
-}
-
-.light .site-header {
-  background: rgba(250, 250, 250, 0.85);
 }
 
 .site-header .container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
 }
 
 .logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-cyan);
   text-decoration: none;
+  font-weight: 600;
+  font-size: 1.25rem;
+  transition: 0.2s;
 }
 
-.site-nav {
-  display: flex;
-  gap: 2rem;
+.logo:hover {
+  color: var(--accent-pink);
+  text-shadow: var(--shadow-neon);
 }
 
+/* NAVIGATION */
 .site-nav a {
-  color: var(--text-muted);
+  margin-left: 20px;
   text-decoration: none;
-  font-weight: 500;
-  transition: var(--transition);
+  color: var(--accent-cyan);
+  transition: 0.2s;
 }
 
 .site-nav a:hover {
-  color: var(--accent);
+  color: var(--accent-pink);
+  text-shadow: var(--shadow-neon);
 }
 
-/* Кнопка темы */
+/* ==============================
+   THEME TOGGLE
+============================== */
 #theme-toggle {
-  background: none;
-  border: none;
-  font-size: 1.4rem;
+  margin-right: 20px;
+  background: transparent;
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+  padding: 6px 10px;
+  border-radius: 4px;
   cursor: pointer;
-  padding: 0.4rem;
-  position: relative;
+  transition: 0.2s;
+}
+#theme-toggle:hover {
+  color: var(--accent-pink);
+  border-color: var(--accent-pink);
+  text-shadow: var(--shadow-neon);
 }
 
-.icon-moon { display: block; }
-.icon-sun { display: none; }
-.light .icon-moon { display: none; }
-.light .icon-sun { display: block; }
+.icon-sun, .icon-moon {
+  font-size: 1rem;
+}
 
-/* Поиск */
+/* ==============================
+   SEARCH
+============================== */
 .search-wrapper {
   position: relative;
-  margin-left: 1rem;
 }
 
 #search-input {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  width: 220px;
-  outline: none;
-  transition: var(--transition);
+  padding: 8px 12px;
+  background: var(--bg-alt);
+  border: none;
+  border-left: 3px solid var(--accent-cyan);
+  color: var(--fg);
+  border-radius: 4px;
+  width: 180px;
+  transition: 0.2s;
 }
 
 #search-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(102, 252, 241, 0.15);
+  outline: none;
+  box-shadow: var(--shadow-neon);
 }
 
 .search-results {
   position: absolute;
-  top: 100%;
+  top: 40px;
   left: 0;
   right: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  margin-top: 0.5rem;
-  max-height: 60vh;
-  overflow-y: auto;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  background: var(--bg-alt);
+  border: 1px solid var(--accent-purple);
+  border-radius: 4px;
   display: none;
-  z-index: 1000;
+  box-shadow: var(--shadow-neon);
+  z-index: 999;
 }
 
-.search-results a {
+.search-results.visible {
   display: block;
-  padding: 0.8rem 1rem;
-  color: var(--text);
-  text-decoration: none;
 }
 
-.search-results a:hover {
-  background: var(--accent);
-  color: #000;
-}
-
-/* ===== Карточки постов ===== */
-.post-list {
-  display: grid;
-  gap: 2rem;
-}
-
-.post-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.8rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-}
-
-.post-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-}
-
-.post-card .title {
-  margin: 0 0 0.5rem;
-  font-size: 1.55rem;
-}
-
-.post-card .title a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.post-card .title a:hover {
-  color: var(--accent-hover);
-}
-
-.post-card .meta {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-
-.post-card .excerpt {
-  margin: 1rem 0;
-  color: var(--text);
-}
-
-.read-more {
-  color: var(--accent);
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-/* ===== Пост ===== */
-.post-header h1 {
-  font-size: 2.6rem;
-  margin-bottom: 0.5rem;
-  color: var(--accent);
-}
-
-.post-meta {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  margin-bottom: 2.5rem;
-}
-
-/* ===== Футер ===== */
-.site-footer {
-  margin-top: 5rem;
-  padding: 3rem 0;
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  text-align: center;
-}
-
-/* Адаптив */
-@media (max-width: 768px) {
-  .site-header .container {
-    flex-direction: column;
-  }
-  .site-nav {
-    order: 3;
-    margin-top: 1rem;
-  }
-  #search-input { width: 100%; }
-}
-
-
-/* ===== Главная страница ===== */
+/* ==============================
+   HERO SECTION
+============================== */
 .hero {
+  margin: 40px 0;
   text-align: center;
-  padding: 6rem 1rem 4rem;
-  margin-bottom: 4rem;
 }
 
 .hero h1 {
-  font-size: 4.5rem;
-  margin: 0 0 1rem;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.03em;
+  font-size: 2.4rem;
+  color: var(--accent-pink);
+  text-shadow: 0 0 8px var(--accent-purple);
 }
 
 .hero .tagline {
-  font-size: 1.35rem;
-  color: var(--text-muted);
-  margin: 1.5rem 0;
-  max-width: 680px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
+  color: var(--accent-cyan);
+  font-size: 1.1rem;
+  margin-bottom: 10px;
 }
 
 .hero .meta {
-  color: var(--text-muted);
-  font-size: 1rem;
-  font-family: 'JetBrains Mono', monospace;
+  opacity: 0.9;
+  margin-top: 6px;
 }
 
-/* Секция с постами */
-.posts-section {
-  margin-top: 3rem;
+/* ==============================
+   POST LIST
+============================== */
+.post-list {
+  margin-top: 30px;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2.5rem;
-  padding-bottom: 0.8rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.section-header h2 {
-  margin: 0;
-  font-size: 1.8rem;
-  color: var(--accent);
-}
-
-.all-link {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  text-decoration: none;
-}
-
-.all-link:hover {
-  color: var(--accent);
-}
-
-/* Карточки на главной */
-.post-card .excerpt {
-  margin: 1rem 0 1.2rem;
-  color: var(--text-muted);
-  font-size: 1.02rem;
-  line-height: 1.65;
-}
-
-.post-card .tags {
-  margin-left: 1rem;
-}
-
-.tag {
-  font-size: 0.8rem;
-  color: var(--accent);
-  background: rgba(102, 252, 241, 0.1);
-  padding: 0.15rem 0.5rem;
-  border-radius: 6px;
-  margin-right: 0.4rem;
-  text-decoration: none;
-  transition: var(--transition);
-}
-
-.light .tag {
-  background: rgba(0, 144, 166, 0.1);
-}
-
-.tag:hover {
-  background: var(--accent);
-  color: #000;
-}
-
-/* Пагинация */
-.pagination {
-  display: flex;
-  justify-content: space-between;
-  margin: 4rem 0 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-}
-
-.pagination a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.pagination a:hover {
-  text-decoration: underline;
-}
-
-/* Мобильная адаптация героя */
-@media (max-width: 640px) {
-  .hero h1 { font-size: 3.2rem; }
-  .hero { padding: 4rem 1rem 3rem; }
-  .section-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-}
-
-
-/* Неоновый glow для заголовков и акцентов */
-h1, h2, h3, .hero h1, .logo, .post-card .title a {
-  text-shadow: var(--glow-cyan);
-  transition: all var(--transition);
-}
-
-.hero h1 {
-  font-size: 5.5rem;
-  background: linear-gradient(90deg, var(--cyan), var(--pink), var(--purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(0, 245, 255, 0.6);
-}
-
-.logo {
-  background: linear-gradient(90deg, var(--pink), var(--cyan));
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 800;
-}
-
-/* Карточки с неоновой рамкой */
 .post-card {
-  background: var(--bg-card);
-  border: 1px solid transparent;
-  border-radius: var(--radius);
-  padding: 2rem;
-  position: relative;
-  overflow: hidden;
-  transition: var(--transition);
-}
-
-/* «неоновая трубка» по периметру */
-.post-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  padding: 2px;
-  background: linear-gradient(45deg, var(--cyan), var(--pink), var(--purple), var(--cyan));
-  border-radius: var(--radius);
-  mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  -webkit-mask-composite: destination-out;
-  opacity: 0;
-  transition: opacity var(--transition);
-}
-
-.post-card:hover::before {
-  opacity: 1;
+  background: var(--bg-alt);
+  border-left: 4px solid var(--accent-purple);
+  padding: 20px;
+  margin-bottom: 25px;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(255, 0, 255, 0.15);
+  transition: 0.25s ease;
 }
 
 .post-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), var(--glow-pink);
+  transform: translateX(4px);
+  box-shadow: var(--shadow-neon);
 }
 
-/* Теги — как неоновые таблички */
-.tag {
-  background: rgba(0, 245, 255, 0.15);
-  color: var(--cyan);
-  text-shadow: 0 0 8px rgba(0, 245, 255, 0.6);
-  border: 1px solid rgba(0, 245, 255, 0.4);
-  padding: 0.35rem 0.75rem;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  font-weight: 600;
+.post-card .title a {
+  color: var(--accent-pink);
+  text-decoration: none;
+  font-size: 1.2rem;
 }
 
-.tag:hover {
-  background: var(--cyan);
-  color: #000;
-  box-shadow: var(--glow-cyan);
+.post-card .title a:hover {
+  color: var(--accent-cyan);
+  text-shadow: var(--shadow-neon);
 }
 
-/* Кнопка темы — неоновая */
-#theme-toggle {
-  background: none;
-  border: 2px solid var(--cyan);
-  color: var(--cyan);
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  font-size: 1.4rem;
-  box-shadow: var(--glow-cyan);
-  transition: var(--transition);
+.post-card .excerpt {
+  margin-top: 10px;
+  opacity: 0.9;
 }
 
-#theme-toggle:hover {
-  background: var(--cyan);
-  color: #000;
-  transform: scale(1.1);
+.post-card .meta {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
-/* Ссылки в навигации */
-.site-nav a:hover {
-  color: var(--pink);
-  text-shadow: var(--glow-pink);
+.post-card time {
+  margin-right: 10px;
+}
+
+.tags a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+}
+
+.tags a:hover {
+  color: var(--accent-pink);
+  text-shadow: var(--shadow-neon);
+}
+
+/* ==============================
+   TAXONOMY LIST/SINGLE
+============================== */
+.taxonomy-list a {
+  display: inline-block;
+  padding: 6px 10px;
+  margin: 6px;
+  background: var(--accent-purple);
+  color: #0c0c0c;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.taxonomy-list a:hover {
+  background: var(--accent-pink);
+  box-shadow: var(--shadow-neon);
+}
+
+/* ==============================
+   PAGINATION
+============================== */
+.pagination {
+  margin: 30px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pagination a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid var(--accent-cyan);
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+.pagination a:hover {
+  color: var(--accent-pink);
+  border-color: var(--accent-pink);
+  text-shadow: var(--shadow-neon);
+}
+
+/* ==============================
+   FOOTER
+============================== */
+.site-footer {
+  background: var(--bg-alt);
+  margin-top: 60px;
+  padding: 20px 0;
+  text-align: center;
+  opacity: 0.85;
+  box-shadow: var(--shadow-neon);
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+/* ==============================
+   ARTICLE CONTENT
+============================== */
+.content h1, .content h2, .content h3 {
+  color: var(--accent-pink);
+  text-shadow: 0 0 6px var(--accent-purple);
+}
+
+.content a {
+  color: var(--accent-cyan);
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.content a:hover {
+  color: var(--accent-pink);
+  text-shadow: var(--shadow-neon);
+}
+
+pre, code {
+  background: #111123;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-family: "JetBrains Mono", monospace;
+  color: var(--accent-cyan);
+}
+
+pre {
+  padding: 12px;
+  overflow-x: auto;
 }
