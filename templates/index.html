@@ -1,29 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Mind Debug</h1>
 
-{% for page in paginator.pages %}
-<div class="post-card">
-    <div class="title">
-        <a href="{{ page.permalink }}">{{ page.title }}</a>
-    </div>
-    <div class="meta">
-        {{ page.date | date(format="%Y-%m-%d") }}
-        {% if page.taxonomies.tags %}
-            — {{ page.taxonomies.tags | join(sep=", ") }}
-        {% endif %}
-    </div>
-    <p>{{ page.summary }}</p>
-</div>
+{% set sections = [
+    get_section(path="essays/_index.md"),
+    get_section(path="misc/_index.md"),
+    get_section(path="se/_index.md"),
+    get_section(path="reading/_index.md"),
+] %}
+
+{% set_global all_posts = [] %}
+
+{# Собираем все посты из всех секций #}
+{% for section in sections %}
+    {% set_global all_posts = all_posts | concat(with=section.pages) %}
 {% endfor %}
 
-{% if paginator.previous %}
-    <a href="{{ paginator.previous }}">← Newer</a>
-{% endif %}
-&nbsp;
-{% if paginator.next %}
-    <a href="{{ paginator.next }}">Older →</a>
-{% endif %}
+{# Сортируем по дате — новые сверху #}
+{% set_global all_posts = all_posts | sort(attribute="date") | reverse %}
+<div class="post-list">
+    <h1 class="title">Все посты</h1>
 
+    <ul>
+    {% for post in all_posts %}
+    <li>
+    <article class="post-card">
+        <a href="{{ post.permalink }}">
+            <h2>{{ post.title }}</h2>
+        </a>
+        <small>{{ post.date | date(format="%Y-%m-%d") }}</small>
+
+        {% if post.summary %}
+        <p>{{ post.summary }}</p>
+        {% endif %}
+    </article>
+    </li>    
+    {% endfor %}
+    </ul>
+</div>
 {% endblock content %}
