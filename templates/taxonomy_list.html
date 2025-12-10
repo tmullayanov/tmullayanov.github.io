@@ -6,7 +6,7 @@
 <ul>
 {% for term in terms %}
   <li>
-    <a href="{{ term.permalink }}">
+    <a class="tag-link" href="{{ term.permalink }}">
       {{ term.name }} ({{ term.pages | length }})
     </a>
   </li>

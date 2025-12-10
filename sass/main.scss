@@ -257,6 +257,15 @@ code, pre, kbd, .logo, h1, h2, h3, h4, h5, .post-title {
   box-shadow: var(--glow-cyan);
 }
 
+.tag-link {
+  color: white;
+}
+
+.tag-link:hover {
+  color: var(--pink);
+  text-shadow: var(--glow-pink);
+}
+
 /* ================== Прочее ================== */
 .section-header {
   display: flex;
