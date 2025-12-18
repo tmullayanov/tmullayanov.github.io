@@ -7,7 +7,7 @@
     {{ page.date | date(format="%d %B, %Y") }}
     {% if page.taxonomies.tags %}
         — {% for tag in page.taxonomies.tags %}
-            <a href="{{ config.base_url }}/tags/{{ tag }}/">{{ tag }}</a>{% if not loop.last %}, {% endif %}
+            <a class="tag-link" href="{{ config.base_url }}/tags/{{ tag }}/">{{ tag }}</a>{% if not loop.last %}, {% endif %}
         {% endfor %}
     {% endif %}
 </div>
