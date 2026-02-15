@@ -16,9 +16,7 @@ taxonomies = [
 
 
 [markdown.highlighting]
-# When set to "true", missing highlight languages are treated as errors. Defaults to false but recommended to set to true.
-error_on_missing_language = false
-style = "inline"
+theme = "gruvbox-dark"
 
 [extra]
 # Put all your custom variables here
