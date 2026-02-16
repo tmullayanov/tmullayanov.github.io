@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru">
+    <title>Mind Debug - psychology</title>
+    <link rel="self" type="application/atom+xml" href="https://tmullayanov.github.io/tags/psychology/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://tmullayanov.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2025-12-08T00:00:00+00:00</updated>
+    <id>https://tmullayanov.github.io/tags/psychology/atom.xml</id>
+    <entry xml:lang="ru">
+        <title>Ниагарский водопад Тони Роббинса.</title>
+        <published>2025-12-08T00:00:00+00:00</published>
+        <updated>2025-12-08T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              tmullayanov
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://tmullayanov.github.io/blog/robbins-flow/"/>
+        <id>https://tmullayanov.github.io/blog/robbins-flow/</id>
+        
+        <content type="html" xml:base="https://tmullayanov.github.io/blog/robbins-flow/">&lt;p&gt;Недавно взялся на Тони Роббинса (да, пробуждаю в себе Исполина, хе-хе).
+И понял, что это круто переносится на нашу с вами работу.&lt;&#x2F;p&gt;
+&lt;p&gt;Смотрите - мы живем в перманентном software crisis:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;cloudflare падает по нескольку раз в месяц из-за пустяковых ошибок (утягивая за собой треть интернета);&lt;&#x2F;li&gt;
+&lt;li&gt;windows 11 радует багами каждую неделю (то Пуск отвалится, то какое-нибудь полюшко на экране логина пропадет);&lt;&#x2F;li&gt;
+&lt;li&gt;и вообще windows 11 требует минимум 16 Гб дефицитной нынче оперативки;&lt;&#x2F;li&gt;
+&lt;li&gt;discord вместо устранения утечек памяти просто перезапускает приложение.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;У нас совершенно точно &lt;em&gt;есть&lt;&#x2F;em&gt; способы не писать софт вот &lt;em&gt;так&lt;&#x2F;em&gt; - и при этом производить его и быстрее, и дешевле.
+Но этого не происходит.
+Почему?&lt;&#x2F;p&gt;
+&lt;p&gt;Как по мне - люди просто не верят, что качество окупится. Как будто &quot;завтра&quot; слишком далеко, чтобы наступить.
+А значит, можно проскочить или сделать что-нибудь красивое для performance-review.
+Но завтра &lt;em&gt;почему-то&lt;&#x2F;em&gt; наступает.&lt;&#x2F;p&gt;
+&lt;p&gt;А у Роббинса есть красивая картинка для этого, на уровне Демарко:&lt;&#x2F;p&gt;
+&lt;p&gt;Жизнь - это река, по которой мы сплавляемся.
+Краткосрочные решения - попытки пропетлять меж камней или просто поплыть по течению.
+Долгосрочные решения - это когда мы энергично гребём туда, куда нам действительно нужно.&lt;&#x2F;p&gt;
+&lt;p&gt;Если долго не грести, однажды разбудит грохот Ниагарского водопада,
+До кромки уже рукой подать, и времени на маневр нет.&lt;&#x2F;p&gt;
+&lt;p&gt;Роббинс, кстати, дает ответ, что с этим делать:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Нужно либо принять решение пустить в ход оба весла и изо всех сил грести в другом направлении, либо решить обдумать все заранее. Наметьте маршрут, куда вы действительно хотите плыть, и составьте план или карту, с тем чтобы можно было принимать обдуманные решения по пути следования.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;В программной инженерии он звучал бы примерно так: либо ты управляешь сложностью и взращиваешь в себе хорошие привычки, либо твоя система приведёт тебя к самой кромке водопада. И тогда выбора уже не будет.&lt;&#x2F;p&gt;
+</content>
+        
+    </entry>
+</feed>
