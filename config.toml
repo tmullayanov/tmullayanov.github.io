@@ -1,22 +1,57 @@
 # The URL the site will be built for
 base_url = "https://tmullayanov.github.io"
 
-# Whether to automatically compile all Sass files in the sass directory
-compile_sass = true
-
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
-
 default_language = "ru"
 
-# Разделы (каждый будет иметь свою ленту)
 taxonomies = [
-  { name = "tags", feed = true }
+  { name = "tags", feed = true },
+  { name = "categories", feed = true }
 ]
 
+theme = "linkita"
 
-[markdown.highlighting]
-theme = "gruvbox-dark"
+
+# The default author for pages.
+# See "extra.profiles".
+author = "tmullayanov"
+
+# The site title.
+# Will be in all page titles.
+title = "Mind Debug"
+
+# The site description.
+# Used in feeds by default.
+description = ""
+
+# Automatically generate a feed.
+# Default value: false
+generate_feeds = true
+feed_filenames = ["atom.xml"]
 
 [extra]
 # Put all your custom variables here
+comments = false
+theme = "toggle"
+toc = true
+latex = true
+codeblock = true
+math = true
+mermaid = true
+
+paginate_by = 10
+author = "Timur Mullayanov"
+
+header_menu_name = "menu_name"
+
+[extra.menus]
+menu_name = [
+  { url = "$BASE_URL/blog/", name = "Archive" },
+  { url = "$BASE_URL/categories/", name = "Categories" },
+  { url = "$BASE_URL/tags/", name = "Tags" },
+  { url = "$BASE_URL/about/", name = "About" },
+]
+
+[markdown.highlighting]
+style = "class"
+dark_theme = "material-theme-palenight"
+light_theme = "everforest-light"

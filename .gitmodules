@@ -1,0 +1,7 @@
+[submodule "themes/linkita"]
+	path = themes/linkita
+	url = https://codeberg.org/salif/linkita.git
+	branch = v4
+[submodule "themes/radion"]
+	path = themes/radion
+	url = https://github.com/micahkepe/radion

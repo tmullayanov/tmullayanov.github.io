@@ -1,8 +1,8 @@
 +++
 title="Claude C Compiler"
 date=2026-02-12
-[taxonomy]
-tags=["software", "system-design", "ai", "llm"]
+[taxonomies]
+tags = ["software", "system-design", "ai", "llm"]
 +++
 
 Неделю назад Anthropic "взорвал Интернет" новой версией Claude Opus и показал компилятор, написанный исключительно ИИ-агентами.
