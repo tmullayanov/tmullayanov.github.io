@@ -1,0 +1,265 @@
+<!doctype html>
+<html class="not-ready lg:text-base overflow-y-scroll scroll-pt-14 scheme-light dark:scheme-dark" lang="ru">
+
+<head prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="generator" content="Zola v0.21.0" />
+  <title>Claude C Compiler | Mind Debug</title>
+  <meta property="og:site_name" content="Mind Debug" />
+  <meta property="og:title" content="Claude C Compiler" />
+  <meta name="description" content="Неделю назад Anthropic &quot;взорвал Интернет&quot; новой версией Claude Opus и показал компилятор, написанный исключительно ИИ-агентами.Смотрим, что осталось вне фокуса хайпа" />
+  <meta property="og:description" content="Неделю назад Anthropic &quot;взорвал Интернет&quot; новой версией Claude Opus и показал компилятор, написанный исключительно ИИ-агентами.Смотрим, что осталось вне фокуса хайпа" />
+  <meta property="og:url" content="https://tmullayanov.github.io/blog/ccc/" />
+  <link rel="canonical" href="https://tmullayanov.github.io/blog/ccc/" />
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="2026-02-12T00:00:00+00:00" />
+  <meta property="article:tag" content="software" />
+  <meta property="article:tag" content="system-design" />
+  <meta property="article:tag" content="ai" />
+  <meta property="article:tag" content="llm" />
+  <link rel="alternate" type="application/atom+xml" href="https://tmullayanov.github.io/atom.xml" title="Mind Debug | Atom" />
+  <!-- Begin Head inject -->
+  
+  <!-- End Head inject -->
+  <link rel="stylesheet" href="https://tmullayanov.github.io/giallo-light.css" media="(prefers-color-scheme: light)" />
+  <link rel="stylesheet" href="https://tmullayanov.github.io/giallo-dark.css" media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href="https://tmullayanov.github.io/main.min.css?h=78462684530fb1a48e39" />
+  <link rel="stylesheet" href="https://tmullayanov.github.io/icons.css?h=7dd5ab449fa840fc01e2" />
+  <style>:root{--bg: #f4f4f5; --header: #e4e4e7;} :root.dark{--bg: #18181b; --header: #27272a;}</style>
+  <meta name="theme-color" data-light="#e4e4e7" data-dark="#27272a" content="#e4e4e7" />
+  <link rel="icon" type="image/x-icon" href="https://tmullayanov.github.io/favicon.ico" />
+  <link rel="apple-touch-icon" type="image/png" href="https://tmullayanov.github.io/apple-touch-icon.png?h=58bee300054c5308feb3" />
+  <link rel="icon" type="image/png" href="https://tmullayanov.github.io/android-icon.png?h=8d80ec95446bd2c36826" />
+  <script src="https://tmullayanov.github.io/js/zola-theme.min.js?h=26975b146d48e6ff41af"></script>
+  <!-- Begin Head End inject -->
+  
+  <!-- End Head End inject -->
+</head>
+
+<body class="text-black duration-100 ease-out dark:text-white">
+  <!-- Header -->
+<header class="header fixed top-0 z-40 mx-auto min-h-13 w-full">
+  <div class="mx-auto w-full max-w-4xl p-2.5 lg:flex lg:justify-between">
+    <div class="flex justify-between">
+      <div class="flex items-center min-h-8 overflow-hidden">
+        <a title="На главную [Alt + !]" accesskey="!"
+          href="https://tmullayanov.github.io/"
+          class="text-2xl font-semibold truncate">Mind Debug</a>
+        <button type="button" title="Сменить тему [Alt + $]" accesskey="$"
+          onclick="window.zolaTheme.color.toggle();"
+          class="btn-dark ml-4 h-6 w-6 shrink-0 cursor-pointer text-[0px]
+            bg-center bg-no-repeat bg-cover [background-image:var(--icons-btn-dark,url(icons/btn-dark.svg))]
+            dark:[background-image:var(--icons-btn-light,url(icons/btn-light.svg))] dark:invert"
+        ></button>
+      </div>
+      <div title="Меню [Alt + `+`]" role="button" accesskey="+" tabindex="0"
+        class="btn-menu relative z-50 flex h-8 w-8 shrink-0 cursor-pointer select-none flex-col items-center justify-center gap-2.5 lg:hidden"
+        onclick="window.zolaTheme.menu.toggleHeader();"
+        onkeydown="(event.keyCode == 13 || event.keyCode == 32) ? event.preventDefault() || window.zolaTheme.menu.toggleHeader() : true;"
+      ></div>
+    </div>
+    <nav class="flex w-full items-center lg:w-auto">
+      <menu
+        class="nav-wrapper flex w-full flex-col py-2 lg:w-auto lg:flex-row lg:self-center lg:py-0">
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/blog/"
+          >Archive</a>
+        </li>
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/categories/"
+          >Categories</a>
+        </li>
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/tags/"
+          >Tags</a>
+        </li>
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/about/"
+          >About</a>
+        </li>
+      </menu>
+      <!-- Begin Header Nav inject -->
+      
+      <!-- End Header Nav inject -->
+    </nav>
+  </div>
+</header>
+
+  <!-- Begin Body Start inject -->
+  
+  <!-- End Body Start inject -->
+  <main class="prose prose-neutral dark:prose-invert prose-pre:rounded-lg prose-img:rounded-lg
+    relative mx-auto min-h-[calc(100vh-4rem)] max-w-3xl px-4 pt-28 lg:pt-32 pb-12 wrap-break-word">
+    
+<article>
+  <!-- Begin Page Start inject -->
+  
+  <!-- End Page Start inject -->
+
+  <header class="mb-16">
+    <h1 class="my-0! pb-2.5">Claude C Compiler</h1>
+    <!-- Page Info -->
+<div class="text-sm antialiased opacity-80"><time
+      datetime="2026-02-12T00:00:00+00:00">2026-02-12</time><span
+        class="middot"></span><time
+    datetime="PT0H4M0S">4&nbsp;мин</time><span
+      class="middot"></span><span>tmullayanov</span>
+</div>
+
+  </header>
+  <!-- TOC -->
+
+  <!-- Content -->
+  <section><p>Неделю назад Anthropic "взорвал Интернет" новой версией Claude Opus и показал компилятор, написанный исключительно ИИ-агентами.
+Смотрим, что осталось вне фокуса хайпа.</p>
+<span id="continue-reading"></span>
+<p>Неделю назад Anthropic "взорвал Интернет" своим новым релизом.
+К выходу нового Claude Opus 4.6 они сделали живой пример - <a rel="external" href="https://www.anthropic.com/engineering/building-c-compiler">компилятор языка C, который полностью написали ИИ-агенты</a>.</p>
+<p>16 агентов на новеньком Claude без подключения к Интернету в течение 2 недель непрерывно обрабатывали 2 миллиарда токенов входных данных, превратив их в 140 миллионов токенов на выходе.
+Это обошлось в 20'000$ без учета продвинутой инфраструктуры вокруг генерации, компиляции и тестирования.
+В итоге получился компилятор на 100 тысяч строк кода на Rust с логичным названием <strong>CCC</strong> - <a rel="external" href="https://github.com/anthropics/claudes-c-compiler"><strong>Claude C Compiler</strong></a>.</p>
+<p>Он способен скомпилировать ядро Linux, код FFmpeg, SQLite, и даже Doom!
+И выбор задачи понятен: компиляторы сложны, и это настоящая классика хороших программ по Computer Science "в приличных домах".
+Действительно - вершина возможностей сегодняшних ИИ-агентов.</p>
+<p>Реакция на релиз была предсказуемой: всё то же улюлюканье о срочной замене всех программистов, предвкушение AGI и прочих славных побед над старым миропорядком.</p>
+<p>Однако, читая статью, я не мог не зацепиться взглядом за множество вещей, о которых Anthropic пишет явно, но не очень их выпячивает.
+И поначалу всё кажется невинным:</p>
+<ul>
+<li>
+<p>CCC не умеет компилировать в 16-битный x86 - а значит, ядро Linux не сможет выйти из real mode, чтобы загрузиться.
+Странно, ну да ладно.</p>
+</li>
+<li>
+<p>Нет своего ассемблера - пришлось переиспользовать готовый у GCC.
+Сомнительно, но окэй - допустим, это действительно немного "out of scope".</p>
+</li>
+<li>
+<p>У CCC нет своего линкера! И хотя LTO (Link-Time Optimization) может давать существенный прирост быстродействия итогового бинарника, всё же это довольно сложно. Допустим, что это тоже "out of scope".</p>
+</li>
+<li>
+<p>CCC почти ничего не оптимизирует. И даже то, что он пытается сделать, получается хуже, чем у GCC без оптимизаций.</p>
+</li>
+</ul>
+<p>То есть, из всей цепочки работы компилятора (<strong>preprocessor -&gt; compiler -&gt; assembly -&gt; linker</strong>) ребята сделали только первые две.
+Но насколько хорошо?</p>
+<ol>
+<li>
+<p>Есть проблемы с type-checking: CCC не полностью следует стандарту C и, что самое ужасное, - не отвергает программы с ошибками:</p>
+<ul>
+<li><a rel="external" href="https://github.com/anthropics/claudes-c-compiler/issues/63">раз</a></li>
+<li><a rel="external" href="https://github.com/anthropics/claudes-c-compiler/issues/57">два</a> (здесь человек сшил несколько проблем в одну программу. Знатоки C могут поразвлекаться в попытке найти все).</li>
+</ul>
+</li>
+<li>
+<p>Есть репорт о том, что в sqlite не работает <a rel="external" href="https://github.com/anthropics/claudes-c-compiler/issues/74">join</a></p>
+</li>
+</ol>
+<p>Кажется, достаточно, чтобы не пытаться брать его в "реальные системы".
+Но самое ужасное в другом:</p>
+<blockquote>
+<p>I tried (hard!) to fix several of the above limitations but wasn’t fully successful. New features and bugfixes frequently broke existing functionality.</p>
+</blockquote>
+<p>Я называю это <strong>техническим банкротством</strong> - технического долга стало так много, что внести изменения в программу становится невозможно: остается только всё снести и переписать с нуля.
+Как говорится: "Конечная, поезд дальше не идёт".</p>
+<p>Это по-своему впечатляет: <em>типичной</em> команде под руководством <em>типичного</em> менеджера удается дойти до тех.банкротства за пару-тройку лет.
+ИИ-агентам для этого хватило всего 2 недели и 20 тысяч баксов.</p>
+<p>Экономия и ускорение, за которыми гонится индустрия, налицо.👍
+С той лишь разницей, что людям иногда случается сделать выводы и чему-то научиться. А вот нынешний AI этот опыт, увы, сам в себя не впитает.</p>
+<hr />
+<p>Крутая ли вещь CCC? <strong>Да</strong>.
+Это масштабный проект, и совсем недавно мы и помыслить о таком не могли, а сейчас вот CCC умудряется много чего компилировать. И это что-то даже запускается и работает <em>большую часть времени</em>.</p>
+<p>Смог ли новый Claude изменить мир?
+<strong>Не в этот раз</strong>.
+Код LLM точно так же подвержен проблемам роста, становится ненадёжным, непонятным и хрупким.
+Модели не смотрят на мир критически, и я не слышал ни про одного агента, который бы сказал: "Стоп, этот метод большой, дай-ка я его разобью на понятные кусочки поменьше", и порефакторил написанное.</p>
+<p>Результат по-прежнему настолько хорош, насколько хорош сидящий за компьютером человек.
+Это человеку нужно уметь давать чёткие постановки, писать хорошие тесты, замечать code smell и бороться с ними - самому или через промпты.
+И уметь держать сложность системы под контролем.
+Так что это просто ещё один релиз, который снова не убил Software Engineering.</p>
+</section>
+  <hr />
+  <!-- Post Taxonomies -->
+<footer class="mt-12 flex flex-col" tabindex="-1" accesskey="_">
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mr-1.5 mb-1.5 rounded-lg px-5 py-1.5">Теги</span>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/software/">software</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/system-design/">system-design</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/ai/">ai</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/llm/">llm</a>
+    
+  </div>
+</footer>
+
+  <!-- Post Nav -->
+<nav class="block-bg mt-12 flex flex-wrap rounded-lg text-lg">
+  <a
+    class="block-hover-mask flex min-w-[50%] grow items-center rounded-l-md p-6 pr-3 font-semibold no-underline"
+    href="https://tmullayanov.github.io/blog/priority/" accesskey=","
+    ><span class="mr-1.5">&#8249;</span><span>О приоритете и &quot;приоритетах&quot;</span></a>
+  <a
+    class="block-hover-mask ml-auto flex min-w-[50%] grow items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline"
+    href="https://tmullayanov.github.io/blog/robbins-flow/" accesskey="."
+    ><span>Ниагарский водопад Тони Роббинса.</span><span class="ml-1.5">&#8250;</span></a>
+</nav>
+
+  <!-- Begin Page End inject -->
+  
+  <!-- End Page End inject -->
+</article>
+
+  </main>
+  <!-- Footer -->
+<footer class="mx-auto flex lg:mt-5 max-w-3xl flex-wrap items-center px-4 py-3 text-sm opacity-60">
+  <div class="mr-auto basis-full lg:basis-1/2">
+  © <time datetime="2026">2026</time> tmullayanov
+  </div>
+  <div class="flex basis-full lg:basis-1/2 lg:justify-end">
+    <span class="mr-6 lg:ml-6">
+      <a class="link" href="https://www.getzola.org/" target="_blank">Работает на Zola</a>
+    </span>
+    <a class="link" href="https://www.getzola.org/themes/linkita/" target="_blank">&#9998; Linkita</a>
+  </div>
+  <!-- Begin Footer inject -->
+  
+  <!-- End Footer inject -->
+</footer>
+
+  
+  <link rel="stylesheet" href="https://tmullayanov.github.io/katex/katex.min.css?h=383e7b8d45a3003d6ca1" />
+  <script defer src="https://tmullayanov.github.io/katex/katex.min.js?h=5e4f3b03c66a3360fe5c"></script>
+  <script defer src="https://tmullayanov.github.io/katex/contrib/auto-render.min.js?h=bb53eb953394531aae36"></script>
+  <script>document.addEventListener("DOMContentLoaded", window.zolaTheme.katex.init);</script>
+  <!-- Mermaid -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    window.zolaTheme.mermaid.init({ mermaid, s: ".mermaid" });
+  </script>
+
+  <!-- Begin Body End inject -->
+  
+  <!-- End Body End inject -->
+</body>
+
+</html>

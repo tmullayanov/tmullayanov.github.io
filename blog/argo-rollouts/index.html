@@ -1,0 +1,817 @@
+<!doctype html>
+<html class="not-ready lg:text-base overflow-y-scroll scroll-pt-14 scheme-light dark:scheme-dark" lang="ru">
+
+<head prefix="og: https://ogp.me/ns# article: https://ogp.me/ns/article#">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="generator" content="Zola v0.21.0" />
+  <title>Argo Rollouts | Mind Debug</title>
+  <meta property="og:site_name" content="Mind Debug" />
+  <meta property="og:title" content="Argo Rollouts" />
+  <meta property="og:url" content="https://tmullayanov.github.io/blog/argo-rollouts/" />
+  <link rel="canonical" href="https://tmullayanov.github.io/blog/argo-rollouts/" />
+  <meta property="og:type" content="article" />
+  <meta property="article:published_time" content="2026-05-25T00:00:00+00:00" />
+  <meta property="article:tag" content="software" />
+  <meta property="article:tag" content="system-design" />
+  <meta property="article:tag" content="architecture" />
+  <meta property="article:tag" content="k8s" />
+  <meta property="article:tag" content="devops" />
+  <link rel="alternate" type="application/atom+xml" href="https://tmullayanov.github.io/atom.xml" title="Mind Debug | Atom" />
+  <!-- Begin Head inject -->
+  
+  <!-- End Head inject -->
+  <link rel="stylesheet" href="https://tmullayanov.github.io/giallo-light.css" media="(prefers-color-scheme: light)" />
+  <link rel="stylesheet" href="https://tmullayanov.github.io/giallo-dark.css" media="(prefers-color-scheme: dark)" />
+  <link rel="stylesheet" href="https://tmullayanov.github.io/main.min.css?h=78462684530fb1a48e39" />
+  <link rel="stylesheet" href="https://tmullayanov.github.io/icons.css?h=7dd5ab449fa840fc01e2" />
+  <style>:root{--bg: #f4f4f5; --header: #e4e4e7;} :root.dark{--bg: #18181b; --header: #27272a;}</style>
+  <meta name="theme-color" data-light="#e4e4e7" data-dark="#27272a" content="#e4e4e7" />
+  <link rel="icon" type="image/x-icon" href="https://tmullayanov.github.io/favicon.ico" />
+  <link rel="apple-touch-icon" type="image/png" href="https://tmullayanov.github.io/apple-touch-icon.png?h=58bee300054c5308feb3" />
+  <link rel="icon" type="image/png" href="https://tmullayanov.github.io/android-icon.png?h=8d80ec95446bd2c36826" />
+  <script src="https://tmullayanov.github.io/js/zola-theme.min.js?h=26975b146d48e6ff41af"></script>
+  <!-- Begin Head End inject -->
+  
+  <!-- End Head End inject -->
+</head>
+
+<body class="text-black duration-100 ease-out dark:text-white">
+  <!-- Header -->
+<header class="header fixed top-0 z-40 mx-auto min-h-13 w-full">
+  <div class="mx-auto w-full max-w-4xl p-2.5 lg:flex lg:justify-between">
+    <div class="flex justify-between">
+      <div class="flex items-center min-h-8 overflow-hidden">
+        <a title="На главную [Alt + !]" accesskey="!"
+          href="https://tmullayanov.github.io/"
+          class="text-2xl font-semibold truncate">Mind Debug</a>
+        <button type="button" title="Сменить тему [Alt + $]" accesskey="$"
+          onclick="window.zolaTheme.color.toggle();"
+          class="btn-dark ml-4 h-6 w-6 shrink-0 cursor-pointer text-[0px]
+            bg-center bg-no-repeat bg-cover [background-image:var(--icons-btn-dark,url(icons/btn-dark.svg))]
+            dark:[background-image:var(--icons-btn-light,url(icons/btn-light.svg))] dark:invert"
+        ></button>
+      </div>
+      <div title="Меню [Alt + `+`]" role="button" accesskey="+" tabindex="0"
+        class="btn-menu relative z-50 flex h-8 w-8 shrink-0 cursor-pointer select-none flex-col items-center justify-center gap-2.5 lg:hidden"
+        onclick="window.zolaTheme.menu.toggleHeader();"
+        onkeydown="(event.keyCode == 13 || event.keyCode == 32) ? event.preventDefault() || window.zolaTheme.menu.toggleHeader() : true;"
+      ></div>
+    </div>
+    <nav class="flex w-full items-center lg:w-auto">
+      <menu
+        class="nav-wrapper flex w-full flex-col py-2 lg:w-auto lg:flex-row lg:self-center lg:py-0">
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/blog/"
+          >Archive</a>
+        </li>
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/categories/"
+          >Categories</a>
+        </li>
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/tags/"
+          >Tags</a>
+        </li>
+        <li>
+          <a
+            class="primary-link block py-2 text-center text-lg font-medium lg:px-3 lg:py-0"
+            href="https://tmullayanov.github.io/about/"
+          >About</a>
+        </li>
+      </menu>
+      <!-- Begin Header Nav inject -->
+      
+      <!-- End Header Nav inject -->
+    </nav>
+  </div>
+</header>
+
+  <!-- Begin Body Start inject -->
+  
+  <!-- End Body Start inject -->
+  <main class="prose prose-neutral dark:prose-invert prose-pre:rounded-lg prose-img:rounded-lg
+    relative mx-auto min-h-[calc(100vh-4rem)] max-w-3xl px-4 pt-28 lg:pt-32 pb-12 wrap-break-word">
+    
+<article>
+  <!-- Begin Page Start inject -->
+  
+  <!-- End Page Start inject -->
+
+  <header class="mb-16">
+    <h1 class="my-0! pb-2.5">Argo Rollouts</h1>
+    <!-- Page Info -->
+<div class="text-sm antialiased opacity-80"><time
+      datetime="2026-05-25T00:00:00+00:00">2026-05-25</time><span
+        class="middot"></span><time
+    datetime="PT0H20M0S">20&nbsp;мин</time><span
+      class="middot"></span><span>tmullayanov</span>
+</div>
+
+  </header>
+  <!-- TOC -->
+<nav class="block-bg prose-a:secondary-link mb-12 rounded-lg p-2 text-lg">
+  <details>
+    <summary class="select-none py-0.5 lg:py-1 pl-3.5" title="[Alt + =]" accesskey="=">
+      <span class="cursor-pointer ml-0.5">Содержание</span>
+    </summary>
+    <ul class="ps-8">
+      <li class="ps-0.5">
+        <a class="no-underline hover:underline" href="#kanareechnye-relizy-ruchnaia-marshrutizatsiia-istio-i-argo-rollouts">Канареечные релизы: ручная маршрутизация, Istio и Argo Rollouts</a>
+        <ul>
+          <li class="ps-0.5">
+            <a class="no-underline hover:underline" href="#ob-obnovlenii-prodakshena">Об обновлении продакшена</a>
+          </li>
+          <li class="ps-0.5">
+            <a class="no-underline hover:underline" href="#snizhaem-strakh-kanareechnye-relizy">Снижаем страх: канареечные релизы</a>
+          </li>
+          <li class="ps-0.5">
+            <a class="no-underline hover:underline" href="#stsenarii-kanareek">Сценарии канареек</a>
+          </li>
+          <li class="ps-0.5">
+            <a class="no-underline hover:underline" href="#k8s-istio-argo-rollouts">k8s+Istio+Argo Rollouts</a>
+          </li>
+          <li class="ps-0.5">
+            <a class="no-underline hover:underline" href="#o-dokumentatsii-k-argo-rollouts">О документации к Argo Rollouts</a>
+          </li>
+          <li class="ps-0.5">
+            <a class="no-underline hover:underline" href="#vyvody">Выводы</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </details>
+</nav>
+
+  <!-- Content -->
+  <section><p>#canary #software-engineering #devops</p>
+<h1 id="kanareechnye-relizy-ruchnaia-marshrutizatsiia-istio-i-argo-rollouts">Канареечные релизы: ручная маршрутизация, Istio и Argo Rollouts</h1>
+<p>Канареечные релизы - хороший способ сделать релизы чуточку безопаснее, а работу с продакшеном - спокойнее и увереннее.
+К счастью, для многих случаев уже есть готовые средства. И здесь мы посмотрим, какие варианты есть в k8s-окружениях, и как <a rel="external" href="https://istio.io/">Istio</a> и <a rel="external" href="https://argoproj.github.io/rollouts/">Argo Rollouts</a> могут помочь реализовать механизм постепенной раскатки: от простого разделения трафика до автоматического анализа метрик приложения.</p>
+<p>Статья построена в формате "от простого к сложному".</p>
+<p>В конце мы получим схему, где новая версия сначала получает часть трафика или запросы beta-пользователей, затем Argo Rollouts ждёт ручного подтверждения или проверяет Prometheus-метрики и сам решает, продолжать раскатку или откатываться.</p>
+<p>Статья предполагает базовые знания и навыки работы с k8s: понимание основных Resources и процессов их обновления.</p>
+<h2 id="ob-obnovlenii-prodakshena">Об обновлении продакшена</h2>
+<p>Продакшен - очень важное место. Именно там мы зарабатываем деньги, наносим пользу и делаем мир лучше.</p>
+<p>Естественно относиться к нему с бережностью и осторожностью.
+Но часто эта осторожность сковывает нас.
+Может, и разумно не деплоить важные вещи в пятницу вечером. Может,  Но насколько разумно обновляться раз в месяц сугубо по ночам, согнав на это мероприятие с десяток инженеров, внимательно следящих за каждым шагом?</p>
+<p>Что интересно, такая осторожность вовсе не снижает риск.
+Чем реже мы обновляемся, тем больше объём вносимых изменений.
+Чем важнее для нас обновление, тем больше стресса мы испытываем, и тем более мы склонны к ошибкам.</p>
+<p>У каждой фичи, которую мы делаем, есть свой <strong>Cost of Delay</strong> - цена <em>невнедрения</em>.
+Её трудно посчитать, но это не значит, что её нет. Чем реже мы релизим, тем большую цену невнедрения платим.
+Каждый день невнедрения - это день, когда сделанная нами фича не оказывает эффекта, ради которого она делалась.</p>
+<p>Ну и, наконец, ночные обновления, как правило, проводят границу между теми, кто пишет, и теми, кто внедряет.
+В результате, если (или точнее, <em>когда</em>) что-то пойдет не так, знающие, как исправить ошибку, будут недоступны - их нужно будет вызванивать посреди ночи, надеясь, что их ум будет так же остр, как и днём.
+А разработчик, отделённый от забот продакшена, приучится не держать его в голове.
+Именно против этого и восставал DevOps, когда начинался как движение за изменение культуры.</p>
+<p>Парадоксально, но для снижения риска нам не нужно становиться ещё аккуратнее с продакшеном. Не нужно вводить комитеты по одобрению изменений.
+Совсем наоборот - чем чаще мы будем проводить изменения, тем нам будет лучше.
+Обновления будут меньше по размеру. Это положительно коррелирует с риском что-то сломать. И снижает стоимость анализа и отладки. Ведь гораздо проще найти ошибку в 10 строках, чем в 1000.</p>
+<p>Но проводить их нужно аккуратно, ограничивая потенциальный урон.
+И тут нам на помощь приходят схемы <strong>канареечных релизов</strong>.</p>
+<h2 id="snizhaem-strakh-kanareechnye-relizy">Снижаем страх: канареечные релизы</h2>
+<h3 id="obshchaia-ideia-kanareechnykh-relizov">Общая идея канареечных релизов</h3>
+<p><strong>Канареечный релиз</strong> - способ доставить обновление не всем сразу, а лишь ограниченной части пользователей или трафика. И по её поведению/реакции принимать решение о том, можем ли мы раскатить это обновление дальше</p>
+<p>Разумеется, это не уберёт риск - так не бывает. Но это делает риск маленьким, наблюдаемым и обратимым.</p>
+<p>Например, новую версию можно показать:</p>
+<ul>
+<li>1% случайных пользователей;</li>
+<li>внутренним сотрудникам;</li>
+<li>пользователям из одного региона;</li>
+<li>конкретным beta-тестерам;</li>
+<li>запросам с определенным заголовком
+и так далее.</li>
+</ul>
+<p>Причин для этого может быть много:</p>
+<ul>
+<li>подстраховываемся от ошибок;</li>
+<li>проверяем, как новая версия ведёт себя на реальном трафике;</li>
+<li>собираем обратную связь;</li>
+<li>постепенно повышаем уверенность перед полной раскаткой.</li>
+</ul>
+<p>На первый взгляд, это очень похоже на A/B-тесты, feature-флаги или разные уровни сервиса: везде мы решаем, кому какой вариант показать.
+Но есть одно важное различие.</p>
+<p>В канареечных релизах наша главная цель - <strong>безопасно выпустить новую версию</strong> и не узнать о проблеме сразу от всех пользователей одновременно.
+Это не имеет отношения к конкретной бизнес-метрике, конкретной функции или разному опыту для разных групп пользователей. Фокус исключительно на снижении даунтайма и упрощении релиза.</p>
+<p>Для того, чтобы эта схема работала, нужно всего несколько вещей.</p>
+<p>Во-первых, сохранять <strong>обратную совместимость</strong>.
+Если мы хотим уметь</p>
+<p>Во-первых, уметь направлять лишь ограниченный трафик на новую версию.
+Например, по проценту, заголовку, региону или пользователю.</p>
+<p>Во-вторых, уметь быстро возвращать этот трафик обратно на старую версию.</p>
+<p>В-третьих, понимать, по каким сигналам мы принимаем решение.
+Это могут быть технические метрики: error rate, latency, saturation, количество рестартов, нагрузка на базу.
+А могут быть и продуктовые сигналы: конверсия, количество жалоб, действия пользователей, обращения в поддержку.</p>
+<p>Формально здесь можно жить и с ручной проверкой.
+Но если мы просто раскатили новую версию на 5% и надеемся, что всё будет хорошо, то это слабая канарейка.
+Настоящая польза проявляется тогда, когда мы заранее для себя определяем, когда продолжаем раскатку, когда ставим на паузу и когда откатываемся.</p>
+<p>Остальные вещи вроде автоматического продвижения на основе метрик опциональны и зависят от вашей ситуации.
+Но сама идея остаётся простой: не прыгать в неизвестность всем весом, а сначала поставить туда одну ногу.</p>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+A(Пользовательский запрос) --&gt; B(Маршрутизатор);
+
+subgraph &quot;Наша система&quot;
+B --&gt; C(&quot;старый сервис&quot;)
+B -- &quot;N % трафика&quot; --&gt; D(&quot;новый сервис&quot;)
+end
+</pre>
+<h3 id="chem-eto-otlichaetsia-ot-blue-green-deployment">Чем это отличается от Blue-Green Deployment?</h3>
+<p>На первый взгляд, очень похоже.
+В обоих случаях у нас одновременно живут две версии приложения: старая, которой мы доверяем, и новая, которую хотим показать миру.
+И в обоих случаях нужен механизм, который решает, куда отправить пользовательский запрос.</p>
+<p>Но полезно разделять две вещи: форму инфраструктуры и механику релиза.</p>
+<p><strong>Blue-Green Deployment</strong> - это в первую очередь способ быстро и безопасно переключиться между двумя <u>полностью готовыми окружениями</u>.
+Есть "синее" окружение, которое сейчас обслуживает продакшен.
+Рядом поднимается "зелёное", в него выкатывается новая версия, оно прогревается, проверяется и ждёт своего часа.
+В классическом варианте, когда мы уверены, что всё хорошо, мы переключаем весь трафик разом.</p>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+A(Пользовательский запрос) --&gt; B(Переключатель);
+
+subgraph &quot;Blue-Green&quot;
+B -- &quot;до релиза: 100%&quot; --&gt; C(&quot;blue &#x2F; старая версия&quot;)
+B -. &quot;после релиза: 100%&quot; .-&gt; D(&quot;green &#x2F; новая версия&quot;)
+end
+</pre>
+<p>То есть Blue-Green снижает риск за счёт быстрого отката.
+Если после переключения стало плохо, мы возвращаем трафик обратно на старое окружение.
+Это удобно, понятно и хорошо подходит для случаев, когда новая версия должна быть проверена целиком до момента включения.</p>
+<p>Разумеется, никто не запрещает переводить трафик между blue и green постепенно.
+Например, сначала отдать новому окружению 5%, потом 20%, потом 50%, потом 100%.
+Инфраструктурно это всё ещё Blue-Green: у нас по-прежнему есть два полноценных контура, и мы переводим трафик с одного на другой.</p>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+A(Пользовательский запрос) --&gt; B(Маршрутизатор);
+
+subgraph &quot;Weighted Blue-Green&quot;
+B -- &quot;95%&quot; --&gt; C(&quot;blue &#x2F; старая версия&quot;)
+B -- &quot;5%&quot; --&gt; D(&quot;green &#x2F; новая версия&quot;)
+end
+</pre>
+<p>Но по процессу такой релиз уже очень похож на канареечный.
+Мы не просто щёлкаем рубильником, а дозируем доступ новой версии к реальным пользователям.</p>
+<p>Канареечный релиз описывает не столько устройство окружений, сколько саму стратегию выпуска.
+Мы постепенно допускаем новую версию к реальным пользователям.
+Сначала 1%, потом 5%, потом 20%, потом больше.
+И на каждом шаге смотрим, не растут ли ошибки, latency, нагрузка на базу, жалобы пользователей и всё остальное, что важно именно для нашей системы.
+Кроме того, сама по себе "канарейка" никак не связана с гранулярностью: "канареить" можно и отдельные микросервисы в вашей микросервисной архитектуре - до тех пор, пока вы не ломаете существующие контракты.</p>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+A(Пользовательский запрос) --&gt; B(Маршрутизатор);
+
+subgraph &quot;Canary&quot;
+B -- &quot;95%&quot; --&gt; C(&quot;stable &#x2F; старая версия&quot;)
+B -- &quot;5%&quot; --&gt; D(&quot;canary &#x2F; новая версия&quot;)
+end
+</pre>
+<p>Главное отличие в акценте.</p>
+<p>Blue-Green отвечает на вопрос: <strong>"можем ли мы держать рядом два полноценных контура и быстро переводить трафик между ними?"</strong>
+А канарейки отвечают на вопрос: <strong>"можем ли мы безопасно учиться на маленькой части реального трафика?"</strong></p>
+<p>Отсюда вытекают практические различия:</p>
+<table><thead><tr><th>Подход</th><th>Что описывает</th><th>Как обычно идёт трафик</th><th>Основная польза</th><th>Основной риск</th></tr></thead><tbody>
+<tr><td>Blue-Green</td><td>два полноценных окружения</td><td>часто 100% на один из контуров, но может быть и постепенно</td><td>быстрый откат и понятное переключение</td><td>дорого держать два полноценных контура; при резком переключении ошибка проявится сразу на всём трафике</td></tr>
+<tr><td>Canary</td><td>стратегию постепенного выпуска</td><td>трафик делится между старой и новой версиями</td><td>проверка на реальных пользователях малыми порциями</td><td>нужна более умная маршрутизация и метрики</td></tr>
+</tbody></table>
+<p>Иными словами, Blue-Green отличается именно наличием второго, заранее подготовленного контура.
+В классическом варианте он работает как рубильник.
+Хороший, надёжный, заранее подготовленный рубильник.</p>
+<p>Канарейка - это скорее регулятор громкости.
+Мы не включаем новую версию сразу на полную, а аккуратно прибавляем, слушая, не начинает ли хрипеть система.</p>
+<p>На практике эти подходы не враждуют друг с другом.
+Их вполне можно комбинировать: например, держать два окружения в духе Blue-Green, но переводить трафик между ними канареечно.</p>
+<p>В этой статье нас больше интересует именно канареечная поставка: не одно большое торжественное переключение между двумя тяжеловесными контурами, а привычка выпускать изменения маленькими порциями и быстро понимать, стало лучше или хуже.</p>
+<h2 id="stsenarii-kanareek">Сценарии канареек</h2>
+
+<link rel="stylesheet" href="https://tmullayanov.github.io/admonition.css?h=98c1477488c4b2c9d71a" type="text/css">
+
+<div
+  class="my-4 flex flex-col rounded-lg bg-(--admonition-bg)"
+  style="--admonition-bg: var(--admonition-quote);"
+>
+  <div class="flex items-center rounded-t-lg bg-(--admonition-bg) p-1">
+    <div
+      class="mx-2 h-4 w-4 text-[0px] [background:var(--url)_center_center_no-repeat] dark:invert"
+      style="--url: url(icons/quote.svg);"
+    >
+      quote
+    </div>
+    <span><strong></strong></span>
+  </div>
+  <div class="pl-4"><p>„Вы скорбите по тем временам, когда мужчины были настоящими мужчинами и сами писали драйверы устройств?“ — Линус Торвальдс, "Just for Fun".</p>
+</div>
+</div>
+<p>Разумеется, самый очевидный вариант - написать всё самому.
+В конце концов, это просто маршрутизатор. Оператор <code>if</code> в нужном месте. Вроде бы не сложно, да и можно вооружиться LLM-ками и довести это до рабочего состояния.
+Такое решение будет полностью контролируемым, в нём можно будет сделать сколь угодно динамическую схему, учитывающую абсолютно всё - от логина пользователя до уровня текущей нагрузки на "канарейку".</p>
+<p>Но не спешите. Обычно на практике такая гибкость <strong>не требуется</strong>.
+Для многих систем вполне сгодится вариант с N% случайных пользователей.
+Для некоторых будут уместнее заранее определенные "пилотные" группы, которые можно опознать по определенному статическому признаку - например, заголовку с ролью.
+И в этих более простых сценариях можно воспользоваться уже тем, что есть.</p>
+<p>Вот краткая сводка вариантов, которые у вас есть.</p>
+<table><thead><tr><th>Подход</th><th style="text-align: right">Гибкость</th><th style="text-align: right">Сложность</th><th style="text-align: right">Автоматизация</th><th style="text-align: right">Риск</th><th>Когда использовать</th></tr></thead><tbody>
+<tr><td>Самописный роутер</td><td style="text-align: right">высокая</td><td style="text-align: right">высокая</td><td style="text-align: right">любая</td><td style="text-align: right">высокий</td><td>если нужна специфичная бизнес-логика</td></tr>
+<tr><td>nginx</td><td style="text-align: right">средняя</td><td style="text-align: right">средняя</td><td style="text-align: right">слабая</td><td style="text-align: right">средний</td><td>простая маршрутизация</td></tr>
+<tr><td>Istio</td><td style="text-align: right">высокая</td><td style="text-align: right">средняя</td><td style="text-align: right">ручная</td><td style="text-align: right">ниже</td><td>traffic splitting/header routing</td></tr>
+<tr><td>Argo Rollouts + Istio</td><td style="text-align: right">высокая</td><td style="text-align: right">выше</td><td style="text-align: right">высокая</td><td style="text-align: right">ниже</td><td>production-grade progressive delivery</td></tr>
+<tr><td>Мы пойдём от самого ручного и простого к более промышленному и автоматизированному.</td><td style="text-align: right"></td><td style="text-align: right"></td><td style="text-align: right"></td><td style="text-align: right"></td><td></td></tr>
+<tr><td>И рассмотрим их подробнее.</td><td style="text-align: right"></td><td style="text-align: right"></td><td style="text-align: right"></td><td style="text-align: right"></td><td></td></tr>
+</tbody></table>
+<h3 id="samopisnye-resheniia">Самописные решения</h3>
+<p>Как уже говорилось, самописные решения позволяют добиться любого уровня автоматизации, использовать любые сочетания критериев, включая динамические.
+Это несомненный плюс.</p>
+<p>Очевидно, за это придется заплатить деньгами и временем, но есть и другие минусы.
+Такое самописное решение становится точкой отказа, повышает latency и нагрузку по железу.</p>
+<p>Влияние на общую архитектуру системы здесь заметно сильнее. К этому варианту нужно подходить с осторожностью, а перед этим - проанализировать имеющиеся альтернативы.</p>
+<h3 id="infrastrukturnye-elementy">Инфраструктурные элементы</h3>
+<p>В некоторых случаях маршрутизацию можно вынести на уровень "служебных узлов", например на reverse proxy и балансировщики.</p>
+<p>Инструменты наподобие nginx умеют заниматься базовой маршрутизацией сами. Например, так выглядит статическая маршрутизация по заголовку "X-Role". Если заголовок указан и равен "beta_tester", мы направим все его запросы на тестовый сервер.</p>
+<pre class="giallo z-code"><code data-lang="nginx"><span class="giallo-l"><span class="z-storage z-type">map</span><span class="z-punctuation"> $</span><span class="z-variable z-variable z-parameter">http_x_role</span><span class="z-punctuation"> $</span><span class="z-variable">backend_url</span><span> {</span></span>
+<span class="giallo-l"><span class="z-constant z-language">    default</span><span>      http://standard_backend</span><span class="z-punctuation">;</span></span>
+<span class="giallo-l"><span class="z-string">    &quot;</span><span class="z-string">beta_tester</span><span class="z-string">&quot;</span><span>    http://test_backend</span><span class="z-punctuation">;</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-storage z-type">server</span><span> {</span></span>
+<span class="giallo-l"><span class="z-storage z-type">    location</span><span class="z-entity z-name"> / </span><span>{</span></span>
+<span class="giallo-l"><span class="z-keyword">        proxy_</span><span class="z-keyword">pass</span><span class="z-punctuation"> $</span><span class="z-variable">backend_url</span><span class="z-punctuation">;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>В таком виде возможны лишь статические правила.
+Динамические правила в nginx возможны через механизм Internal Redirects. Механика их такова: они "замораживают" пользовательский запрос, и в это время делают другой, на внутренний эндпоинт для решения о маршрутизации. В зависимости от его ответа происходит маршрутизация на один из хостов.
+Всё это скрыто от глаз пользователя, и повлиять на этот механизм он не может.</p>
+<p>И динамику можно усилить за счёт "самописного" сервиса рядом, который бы и давал ответ, куда нужно маршрутизировать конкретно этот запрос конкретно в этот момент времени.</p>
+<p>Хотя это интересный и красивый механизм, в этой статье мы его рассматривать не будем.</p>
+<h3 id="standartnye-sredstva-v-k8s-ekosisteme">Стандартные средства в k8s-экосистеме.</h3>
+<p>Как правило, в промышленных инсталляциях k8s не используется в чистом виде. Гораздо проще и приятнее пользоваться им вместе с Service Mesh, и самый популярный вариант здесь - Istio.</p>
+<p>Использование Istio открывает нам простой способ использовать внутреннюю маршрутизацию и дополнять их нашими правилами - балансируя веса или выставляя правила в духе "в зависимости от значения спец.заголовка".</p>
+<hr />
+<p>Все примеры хранятся в <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/tree/master">https://github.com/tmullayanov/app-k8s-canary/tree/master</a>. Дальше мы описываем и разбираем их.</p>
+<hr />
+<h2 id="k8s-istio-argo-rollouts">k8s+Istio+Argo Rollouts</h2>
+<h4 id="infrastruktura">Инфраструктура</h4>
+<p>Что используем:</p>
+<ul>
+<li>любую инсталляцию Kubernetes. Minikube и Docker Desktop Kubernetes тоже работают.</li>
+<li>Istio Service Mesh</li>
+<li>Argo Rollouts</li>
+<li>Prometheus (для продвинутого варианта с анализом метрик приложения)</li>
+</ul>
+<h4 id="o-prilozhenii">О приложении</h4>
+<p>Все примеры будут крутиться вокруг одного-единственного приложения на Python.</p>
+<p>Оно представляет из себя минималистичный бэкенд на FastAPI с тремя эндпоинтами:</p>
+<ul>
+<li>/ - основной эндпоинт. Возвращает человекочитаемую строку с указанием версии приложения (версия указывается при сборке). Для одной из версий с определенным шансом генерируется сообщение "Bad Response" - оно нужно для дальнейшей демонстрации возможностей автоматики.</li>
+<li>/health - служебный, нужен для разворачивания в k8s.</li>
+<li>/metrics - нужен для выставления метрик приложения. Снимается две метрики:
+<ul>
+<li>total_responses - общее количество ответов</li>
+<li>bad_responses - количество ошибок. Оно понадобится нам при анализе успешности деплоя.</li>
+</ul>
+</li>
+</ul>
+<p>Нам специально нужна версия, которая иногда ошибается, чтобы потом показать: Argo Rollouts умеет не просто ждать, а принимать решение по метрикам.</p>
+<h3 id="samyi-prostoi-variant-dva-deployment-a-i-marshrutizatsiia-cherez-istio">Самый простой вариант: два Deployment'а и маршрутизация через Istio.</h3>
+<p>Конфиги под этот пример смотрите <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/tree/master/manifests/01-manual-ab/k8s">здесь</a></p>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+	A(User req) --&gt; B[Istio Virtual Service]
+
+	subgraph k8s
+	B -- &quot;header: role == beta_tester&quot; --&gt; C[Canary Service]
+	B --&gt; D[Stable Service]
+	end
+</pre>
+<p>В самом простом варианте мы можем организовать минимальную канарейку за счет только лишь возможностей Istio.</p>
+<p>В этой схеме мы поддерживаем сразу два деплоймента - Stable и Canary. Каждый из них снабжен своим лейблом - в примере это v1 и v2.
+Тогда можно сделать маршрутизацию на уровне Virtual Service (VS) + DestinationRule (DR).</p>
+<p>DestinationRule в Istio описывает наборы backend-подов, между которыми можно маршрутизировать трафик.
+А VirtualService указывает правило, по которому выбирается тот или иной набор.
+Вот как это выглядит для маршрутизации по заголовку.</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">k</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ind</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> D</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">estinationRule</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etadata</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">amespace</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> a</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">b-demo</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">pec</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ost</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp.ab-demo.svc.cluster.local</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ubsets</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> s</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">table</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    l</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">abels</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      v</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ersion</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> v</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">1</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> &lt;-- указан в deployment</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> c</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">anary</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    l</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">abels</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      v</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ersion</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> v</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">2</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> &lt;-- указан в deployment</span></span></code></pre>
+<p><code>Destination Rule</code> указывает <em>наборы</em> (subsets) подов из наших деплойментов. Поды с лейблом <code>version: v1</code> будут относиться к набору <code>stable</code>, v2 - к <code>canary</code>.
+На эти наборы мы ссылаемся в <code>Virtual Service</code>. В случае совпадения HTTP-заголовка с указанным значением трафик направится в набор <code>canary</code>, в противном случае - в <code>stable</code>.</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">k</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ind</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> V</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">irtualService</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etadata</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">amespace</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> a</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">b-demo</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">pec</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">osts</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-punctuation z-definition z-string z-begin z-yaml z-punctuation"> &quot;</span><span class="z-string z-quoted z-double z-yaml z-string">myapp.01.local</span><span class="z-punctuation z-definition z-string z-end z-yaml z-punctuation">&quot;</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  g</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ateways</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp-gateway</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ttp</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">atch</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">    -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eaders</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        x</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">-role</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          e</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">xact</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation z-definition z-string z-begin z-yaml z-punctuation"> &quot;</span><span class="z-string z-quoted z-double z-yaml z-string">beta_tester</span><span class="z-punctuation z-definition z-string z-end z-yaml z-punctuation">&quot;</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">oute</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">    -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> d</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">estination</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ost</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ubset</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> c</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">anary</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">oute</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">    -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> d</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">estination</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ost</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ubset</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> s</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">table</span></span></code></pre>
+<p>Настраивать match-блоки можно по разным критериям. Подробнее - <a rel="external" href="https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPMatchRequest">здесь</a>.
+Вместо match-критериев можно указать веса. Пример - <a rel="external" href="https://istio.io/latest/docs/reference/config/networking/virtual-service/#HTTPRouteDestination">тут</a>. Такая маршрутизация трафика "неизбирательна". Поэтому если вам неважно, какой именно пользователь попадет на канареечную версию - это ваш случай.</p>
+<p>Важно помнить, что все эти критерии остаются статическими.
+Если мы хотим поменять правило, процент, список beta-пользователей или название заголовка, нам нужно менять конфигурацию Istio.</p>
+<p>Недостаток схемы очевиден. Поды канареечной версии всегда должны быть живы и в строю - даже если мы не проводим обновлений.
+Это дополнительная нагрузка на железо и на поддержку процесса.</p>
+<p>Да и при обновлении нам много чего нужно делать руками.
+При выпуске новой версии мы:</p>
+<ol>
+<li>Обновляем наш Canary Deployment
+<ol>
+<li>Убеждаемся, что с ним всё в порядке</li>
+</ol>
+</li>
+<li>Обновляем наш Stable Deployment
+<ol>
+<li>Убеждаемся, что с ним тоже всё в порядке.</li>
+</ol>
+</li>
+</ol>
+<p>Если мы хотим оперировать весами и постепенно наращивать их долю, нам нужно вручную править эти веса в VS.</p>
+<p><strong>Итог:</strong> Istio умеет маршрутизировать трафик, но не управляет процессом релиза.
+Это не production-grade progressive delivery, а скорее минимальная демонстрация механики: две версии приложения живут рядом, а Istio выбирает, кому какую показать.</p>
+<p>Переходим к контроллеру, который закрывает эту дыру - Argo Rollouts.</p>
+<h3 id="podkliuchaem-argo-rollouts">Подключаем argo rollouts</h3>
+<p>Argo Rollouts ставится в кластер k8s как дополнительный контроллер.
+На схеме это выглядит довольно сложно:</p>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+subgraph &quot;Traffic path&quot;
+U[User] --&gt; G[Istio Gateway]
+G --&gt; VS[VirtualService]
+VS -- &quot;95%&quot; --&gt; ST[Stable Service]
+VS -- &quot;5%&quot; --&gt; CN[Canary Service]
+ST --&gt; P1[Stable Pods]
+CN --&gt; P2[Canary Pods]
+end
+
+subgraph &quot;Control plane&quot;
+R[Argo Rollout] -. &quot;updates weights&quot; .-&gt; VS
+R -. &quot;manages&quot; .-&gt; ST
+R -. &quot;manages&quot; .-&gt; CN
+R -. &quot;creates&#x2F;scales&quot; .-&gt; P1
+R -. &quot;creates&#x2F;scales&quot; .-&gt; P2
+end
+</pre>
+<p>Но при этом Argo Rollouts не делает ничего из того, чего мы уже не видели.</p>
+<p>Он берет на себя следующий список забот и задач:</p>
+<ul>
+<li>создаёт поды (ReplicaSet) стабильной версии сервиса</li>
+<li>при обновлении образа сам создаёт ReplicaSet канареечной версии.</li>
+<li>сам ведет процесс обновления. Причём этот процесс настраиваемый (вами!):
+<ul>
+<li>по времени (сколько времени проводить на каждом шаге)</li>
+<li>по скейлингу (насколько "мощной" должна быть канареечная версия на каждом шаге)</li>
+<li>по распределению трафика между сервисами на каждом шаге</li>
+<li>по критерию успеха/неуспеха</li>
+</ul>
+</li>
+</ul>
+<p>И если всё проходит успешно, роллаут в конечном итоге сам исключит поды старого "стабильного" сервиса из VirtualService, а сами они потушатся - gracefully.
+Неплохо, да?</p>
+<p>Из-за этого обилия задач конфиг Rollout кажется громоздким.
+Но концептуально он устроен просто.
+Полный конфиг см. <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/blob/master/manifests/02-argo-rollout/k8s/05-rollout.yaml">здесь</a>.
+В нём есть раздел под описание Deployment:</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">k</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ind</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> R</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">ollout</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">pec</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  t</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">emplate</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> &lt;--- описание деплоймента</span></span>
+<span class="giallo-l"><span class="z-constant z-numeric">    ...</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eplicas</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 3</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> например</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">pec</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ontainers</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        i</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">mage</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp:v1</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> &lt;-- при обновлении мы фактически меняем этот параметр</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">orts</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">        -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ontainerPort</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 8000</span></span></code></pre>
+<p>За ним следует раздел для описания стратегии нашего Rollout.
+Вообще, их у него две - BlueGreen и Canary.
+Нас интересует только стратегия Canary, поскольку только она позволяет настраивать постепенное наращивание трафика. BlueGreen в исполнении Argo Rollouts переключает весь трафик одномоментно.</p>
+<p>Для стратегии Canary нам нужно указать названия сервисов, которые будут относиться к canary и stable версиям соответственно. Деплойментов нам создавать не нужно - об этом позаботится rollout.
+Самое главное - весь процесс деплоя можно представить в виде последовательности шагов.</p>
+<p>Вот как выглядит стратегия для простой цепочки: "раскати на 5% трафика - подожди немножко - раскати на всех":</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">trategy</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">anary</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">tableService</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp-stable</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">anaryService</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp-canary</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      t</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">rafficRouting</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        i</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">stio</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          v</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">irtualServices</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">            r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">outes</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">            -</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> p</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">rimary</span><span class="z-punctuation z-definition z-comment">               #</span><span class="z-comment"> must match the name in VirtualService&#39;s http.route.name</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">teps</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etWeight</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 5</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> 5% of traffic routed to canary. Alternative: setCanaryScale: {replicas: 1}</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ause</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation"> {</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">d</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">uration</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 60</span><span class="z-punctuation">}</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> seconds by default</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etWeight</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 100</span></span></code></pre>
+<p>Для работы этой стратегии нам нужно описать два сервиса - stable и canary, и описать их в VirtualService:</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">k</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ind</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> V</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">irtualService</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">pec</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-constant z-numeric">  ...</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ttp</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> p</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">rimary</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> must match the name in Argo Rollout&#39;s trafficRouting.istio.virtualServices.routes</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">oute</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">    -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> d</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">estination</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ost</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp-stable.03-rollout-header-split-demo.svc.cluster.local</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      w</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eight</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 100</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">    -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> d</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">estination</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ost</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp-canary.03-rollout-header-split-demo.svc.cluster.local</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      w</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eight</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 0</span></span></code></pre>
+<p>Никакие DestinationRule здесь не нужны. В процессе работы Argo Rollouts сам будет манипулировать весами, заниматься scaling/downscaling подов соответствующих сервисов, в конце - поменяет селекторы так, чтобы stable указывал на новую стабильную ReplicaSet, которую мы только что раскатили.</p>
+<p>Из конфига, кстати, мы видим, как складывается hostname в k8s - это связка из имени сервиса и имени неймпсейса. Довольно удобно :-)</p>
+<p>Общий принцип роллаута (Rollout) в Argo Rollouts такой:</p>
+<ol>
+<li>При первой раскатке сразу раскатить ReplicaSet указанного образа как стабильный.
+Снабдить поды хэшем, уникальным для этой раскатки.</li>
+<li>При каждой последующей раскатке:
+<ol>
+<li>Создать новый ReplicaSet с новым хэшем.</li>
+<li>Выставить веса в VirtualService в селекторе у stable/canary service.</li>
+<li>Начать выполнять шаги, указанные в Rollout, манипулируя весами.</li>
+<li>После завершения всех шагов выставить веса так, чтобы один из ReplicaSet перестал получать трафик. Селекторы stable service будут указывать на новую ReplicaSet (знак того, что новая раскатка считается теперь стабильной)</li>
+<li>Отключить неиспользуемые поды.</li>
+</ol>
+</li>
+</ol>
+<h3 id="argo-rollouts-otdeliaem-kanareek-po-zagolovkam">argo rollouts: отделяем канареек по заголовкам</h3>
+<pre class="mermaid bg-inherit" translate="no">
+  graph LR;
+
+	A(User req) --&gt; B[Rollout]
+
+	subgraph k8s
+	B -- &quot;header: x_role == beta_tester &quot; --&gt; C[Canary Service]
+	B --&gt; D[Stable Service]
+	end
+</pre>
+<p>Точно так же можно использовать Argo Rollouts для разделения канареечного трафика по http-заголовку.
+Это полезно в случаях, когда есть специальная группа пользователей, которую мы хотели бы направить на канареечную версию сервиса.</p>
+<p>Механика может быть разной - фронтенд может прикреплять HTTP-заголовок к каждому запросу этой особой группы пользователей, или же он может автоматически проставляться промежуточными узлами на основе информации от IAM. Конкретное воплощение не так важно, как правило, обеспечить наличие такого заголовка можно.</p>
+
+
+<div
+  class="my-4 flex flex-col rounded-lg bg-(--admonition-bg)"
+  style="--admonition-bg: var(--admonition-warning);"
+>
+  <div class="flex items-center rounded-t-lg bg-(--admonition-bg) p-1">
+    <div
+      class="mx-2 h-4 w-4 text-[0px] [background:var(--url)_center_center_no-repeat] dark:invert"
+      style="--url: url(icons/warning.svg);"
+    >
+      warning
+    </div>
+    <span><strong>важно!</strong></span>
+  </div>
+  <div class="pl-4"><p>Если заголовок приходит извне, пользователь может выставить его произвольно и получить доступ к новой версии "самовольно".</p>
+<p>Если это критично, не доверяйте заголовкам пользователя: либо валидируйте их, либо выставляйте их сами на промежуточных прокси, которые вам подконтрольны.</p>
+</div>
+</div>
+<p>Посмотрим, как изменится наша стратегия.
+Полный вариант роллаута можно посмотреть <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/blob/master/manifests/03-argo-rollout-manual-beta/k8s/05-rollout.yaml">здесь</a>. Полный набор конфигов для k8s <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/tree/master/manifests/03-argo-rollout-manual-beta/k8s">тут</a>.</p>
+<p>В нашей стратегии будет изменение в блоке <code>trafficRouting</code> - нам нужно указать managedRoutes. Это те маршруты, которые будут создаваться контроллером Argo Rollouts на время обновления. На него будет переправляться наш канареечный трафик.</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> rollout</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">trategy</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">anary</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-constant z-numeric">     ...</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      t</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">rafficRouting</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">anagedRoutes</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> b</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">eta-header</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        i</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">stio</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          v</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">irtualServices</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> m</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">yapp</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">            r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">outes</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">            -</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> p</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">rimary</span><span>   </span></span></code></pre>
+<p>А вот как будут выглядеть шаги.
+Первый шаг - инициализация, и на ее примере мы видим слегка другой подход к скейлингу канареек - не только через процент от трафика, но и через прямое количество реплик.
+Логика такая: все ноды должны быть загружены более-менее равномерно, а значит, долю трафика можно высчитать и по количеству нод в целом.
+Как известно, хорошие программисты знают всего три числа: 0, 1 и "много". И управление количеством реплик может помочь вам проверить работу при переходе от "одного" к этому самому "много".</p>
+<p>Далее мы указываем правило маршрутизации по заголовку - указываем, собственно, заголовок и его значение. Маршрутизироваться он должен через тот же роут, что мы указали в секции выше.</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">trategy</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">anary</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-constant z-numeric">     ...</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">teps</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etCanaryScale</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eplicas</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 1</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etHeaderRoute</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> b</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">eta-header</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">atch</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eaderName</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> x</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">-role</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">            h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eaderValue</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">              e</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">xact</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation z-definition z-string z-begin z-yaml z-punctuation"> &quot;</span><span class="z-string z-quoted z-double z-yaml z-string">beta_tester</span><span class="z-punctuation z-definition z-string z-end z-yaml z-punctuation">&quot;</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ause</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation"> {</span><span class="z-punctuation">}</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etCanaryScale</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eplicas</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 3</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ause</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation"> {</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">d</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">uration</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 10</span><span class="z-punctuation">}</span></span></code></pre>
+<p>Обратите внимание на шаг, следующий за этим - в блоке pause мы можем ничего не указывать.
+Это "заморозит" нашу раскатку в текущем состоянии на неопределенный срок.</p>
+<p>"Вечная" пауза хороша, если ваш сценарий требует ручных проверок, или если время набора статистики не определено.
+Так же это помогает, если вы хотите оставить решение о продвижении канарейки за собой.</p>
+<p>В базовом варианте команды выглядят так:</p>
+<pre class="giallo z-code"><code data-lang="shellscript"><span class="giallo-l"><span class="z-entity z-name z-function z-entity z-name">$</span><span class="z-string"> kubectl</span><span class="z-string"> argo</span><span class="z-string"> rollouts</span><span class="z-string"> promote</span><span class="z-string"> myapp</span><span class="z-string"> -</span><span class="z-string">n</span><span class="z-punctuation"> $(</span><span class="z-entity z-name z-function z-entity z-name">YOUR_NAMESPACE</span><span class="z-punctuation">)</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> для продвижения дальше</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-function z-entity z-name">$</span><span class="z-string"> kubectl</span><span class="z-string"> argo</span><span class="z-string"> rollouts</span><span class="z-string"> abort</span><span class="z-string"> myapp</span><span class="z-string"> -</span><span class="z-string">n</span><span class="z-punctuation"> $(</span><span class="z-entity z-name z-function z-entity z-name">YOUR_NAMESPACE</span><span class="z-punctuation">)</span><span class="z-punctuation z-definition z-comment"> #</span><span class="z-comment"> для остановки роллаута </span></span></code></pre>
+<p><strong>ВАЖНО</strong>: если вы выбираете обрубить роллаут, он откатит систему к предыдущему состоянию, в котором есть только стабильная версия, и никаких дополнительных маршрутов нет. При этом роллаут "запомнит" тэг образа, который вы пытались обновить. И если вы попытаетесь раскатить его же снова, то роллаут ничего делать не будет, и никакую цепочку заново не запустит.
+Впрочем, это не должно быть проблемой - ведь всякая новая сборка должна идти со своими уникальным тэгом, верно?</p>
+<h3 id="avtomatiziruem-s-pomoshch-iu-metrik-ispol-zuem-promql">Автоматизируем с помощью метрик: используем PromQL</h3>
+<p>Анализ ошибок не обязан быть ручным.
+Его можно автоматизировать на основе ваших метрик. Для этого есть специальный шаг <code>analysis</code>. Если он завершается успехом, то роллаут идёт дальше. Если нет - завершается, и система возвращается в исходное состояние.</p>
+<p>Подробно описывается в документации Argo Rollouts (<a rel="external" href="https://argo-rollouts.readthedocs.io/en/stable/features/analysis/">https://argo-rollouts.readthedocs.io/en/stable/features/analysis/</a>), здесь же мы рассмотрим минимальный пример, использующий метрики Prometheus для определения, всё ли хорошо с нашим роллаутом.</p>
+<p>Для этого наше приложение на Python инструментировано сбором и экспортом двух метрик:</p>
+<ul>
+<li>total_responses - общее количество ответов, которое отдал сервис</li>
+<li>bad_responses - количество ошибок. Ошибка генерируется случайным образом.</li>
+</ul>
+<p>В нагруженной распределенной системе мелкие ошибки неизбежны и при этом незаметны, потому что имеют случайный характер и легко чинятся внутренними повторными попытками.
+Поэтому критерий "без ошибок" будет неоправданно строгим - вместо этого разумнее использовать критерий "доля ошибок не превышает пороговое значение".
+Другие идеи могут включать в себя сравнение доли ошибок в канареечной раскатке и в стабильной, но здесь мы сосредоточимся на более простом случае.</p>
+<p>Вот как выглядит шаг с анализом в шаблоне (он не обязан быть последним, после него могут идти паузы или дальнейшее промежуточное наращивание трафика)</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> rollout</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">teps</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etCanaryScale</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          r</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eplicas</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 1</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etHeaderRoute</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> b</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">eta-header</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">atch</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eaderName</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> x</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">-role</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">            h</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">eaderValue</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">              e</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">xact</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-punctuation z-definition z-string z-begin z-yaml z-punctuation"> &quot;</span><span class="z-string z-quoted z-double z-yaml z-string">beta_tester</span><span class="z-punctuation z-definition z-string z-end z-yaml z-punctuation">&quot;</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">      -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> a</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">nalysis</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          t</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">emplates</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> t</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">emplateName</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> e</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">rror-rate-check</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">          a</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">rgs</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> s</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">table-hash</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">            v</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">alueFrom</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">              p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">odTemplateHashValue</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> S</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">table</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">          -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> c</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">anary-hash</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">            v</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">alueFrom</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">              p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">odTemplateHashValue</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> L</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">atest</span></span></code></pre>
+<p>Для описания анализа нужно всего лишь указать шаблон для анализа и его аргументы. Классическими являются хэши, которыми Argo Rollouts снабжает поды каждой раскатки - именно по ним и можно выбрать только канареечные либо только стабильные поды приложения.
+Эти хэши являются значениями специального лейбла <code>rollouts-pod-template-hash</code>. Других лейблов Argo Rollouts <u>не выставляет</u>.
+Кстати, поскольку Prometheus label names не допускают дефисы, в PromQL они поменяются на подчеркивания, поэтому искать придется по лейблу <code>rollouts_pod_template_hash</code></p>
+<p>Шаблон в случае Prometheus-метрик будет выглядеть так, как приведено в листинге ниже.
+Обратите внимание на общую обвязку: мы можем определить условие успешности, позволить анализу поработать какое-то время и сделать несколько проб, кроме того мы учитываем и тот факт, что нашим раскаткам может потребоваться некоторое время, чтобы установить все соединения и начать работу.</p>
+<pre class="giallo z-code"><code data-lang="yaml"><span class="giallo-l"><span class="z-punctuation z-definition z-comment">#</span><span class="z-comment"> analysisTemplate</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">  m</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">etrics</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-punctuation z-definition z-block z-sequence z-item z-yaml z-punctuation">  -</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml"> n</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ame</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> e</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">rror-rate</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    i</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">nterval</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> 3</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">0s</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    c</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ount</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 6</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    s</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">uccessCondition</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> (</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">len(result) &gt; 0) &amp;&amp; (result[0] &lt; 0.05)</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    f</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ailureLimit</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-constant z-numeric"> 3</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    i</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">nitialDelay</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> 3</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">0s</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">    p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">rovider</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">      p</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">rometheus</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        a</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">ddress</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string"> h</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">ttp://prometheus-stack-kube-prom-prometheus.default.svc.cluster.local:9090</span></span>
+<span class="giallo-l"><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">        q</span><span class="z-entity z-name z-tag z-entity z-name z-tag z-yaml">uery</span><span class="z-punctuation z-separator z-key-value z-mapping z-yaml z-punctuation">:</span><span class="z-keyword z-keyword z-control"> |</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">          (</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">            sum without(service, job) (</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">              rate(bad_responses_total{rollouts_pod_template_hash=&quot;{{args.canary-hash}}&quot;}[30s])</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">            )</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">            or on() vector(0)</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">          )</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">          / on()</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">          clamp_min(</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">            sum without(service, job) (</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">              rate(total_responses_total{rollouts_pod_template_hash=&quot;{{args.canary-hash}}&quot;}[30s])</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-block z-yaml z-string">            ) </span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-plain z-out z-yaml z-string">	        o</span><span class="z-string z-unquoted z-plain z-out z-yaml z-string">r on() vector(0),</span></span>
+<span class="giallo-l"><span class="z-constant z-numeric">            1</span></span>
+<span class="giallo-l"><span class="z-string z-unquoted z-plain z-out z-yaml z-string">          )</span></span></code></pre>
+<p>В качестве <em>провайдера</em> результата мы указываем prometheus, настроенный в том же кластере (подробнее см. <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/blob/master/README.md">https://github.com/tmullayanov/app-k8s-canary/blob/master/README.md</a>). И запрос в формате PromQL - точно так же, как если бы вы его делали в админ.панели Prometheus.</p>
+<p><strong>Что важно учесть при составлении запроса:</strong></p>
+<ul>
+<li>используйте скользящие окна. Серьезно, на старте может сыпаться довольно много ошибок, связанных с тем, что система еще не готова к работе. Они не должны зашумлять сигнал.</li>
+<li>используйте default-значения. Если приложение не зафиксирует ошибок, то и в Prometheus метрика не улетит. А значит, при запросе этой метрики вы получите пустой вектор.
+Арифметика с пустыми векторами в PromQL часто возвращает пустой результат. Для Argo Rollouts это опасно: analysis может оказаться в сломанном состоянии (Failed/Inconclusive), и исправить его можно будет только через удаление Rollout как ресурса и повторную его раскатку.</li>
+</ul>
+<p>Конфиги, соответствующие этому примеру, находятся здесь: <a rel="external" href="https://github.com/tmullayanov/app-k8s-canary/tree/master/manifests/04-argo-rollout-metrics/k8s">https://github.com/tmullayanov/app-k8s-canary/tree/master/manifests/04-argo-rollout-metrics/k8s</a></p>
+<h2 id="o-dokumentatsii-k-argo-rollouts">О документации к Argo Rollouts</h2>
+<p>У Argo Rollouts есть отдельная страница с документацией:
+<a rel="external" href="https://argo-rollouts.readthedocs.io/en/stable/">https://argo-rollouts.readthedocs.io/en/stable/</a></p>
+<p>Каждый ресурс описан подробно, есть и соотв. примеры.
+Однако, судя по языку, она предполагает, что вы знаете, чего ищете - на этапе знакомства с дополнительными фичами это может мешать.</p>
+<p>К счастью, сама идея нашла отклик у многих, и Интернет полон статей и руководств по Argo Rollouts на любой вкус.</p>
+<h2 id="vyvody">Выводы</h2>
+<p>Обновление продакшена - это хорошо. Обновлять его нужно настолько часто, насколько это необходимо нашему продукту. Наши страхи и опасения не должны превращаться в ограничения.</p>
+<p>И чтобы обновление не превращалось в большое приключение, нужно уметь делать это безопасно.
+Канареечные релизы - одна из тех методик, что может вам в этом помочь.
+К счастью, для неё совершенно необязательно городить свои rollout-механизмы - достаточно просто использовать то, что у вас под рукой.
+Наши инструменты уже многое умеют. И если у вас Kubernetes и Istio - возможно, Argo Rollouts это то, что вам нужно, чтобы перестать релизиться по ночам и вернуть себе спокойный сон.</p>
+</section>
+  <hr />
+  <!-- Post Taxonomies -->
+<footer class="mt-12 flex flex-col" tabindex="-1" accesskey="_">
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mr-1.5 mb-1.5 rounded-lg px-5 py-1.5">Категории</span>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/categories/system-design/">System Design</a>
+    
+  </div>
+  <div class="mb-2 flex flex-wrap">
+    <span class="block-bg mr-1.5 mb-1.5 rounded-lg px-5 py-1.5">Теги</span>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/software/">software</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/system-design/">system-design</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/architecture/">architecture</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/k8s/">k8s</a>
+    
+    <a
+      class="block-bg block-hover mr-1.5 mb-1.5 rounded-lg px-5 py-1.5 no-underline"
+      href="https://tmullayanov.github.io/tags/devops/">devops</a>
+    
+  </div>
+</footer>
+
+  <!-- Post Nav -->
+<nav class="block-bg mt-12 flex flex-wrap rounded-lg text-lg">
+  <a
+    class="block-hover-mask ml-auto flex min-w-[50%] grow items-center justify-end rounded-r-md p-6 pl-3 font-semibold no-underline"
+    href="https://tmullayanov.github.io/blog/priority/" accesskey="."
+    ><span>О приоритете и &quot;приоритетах&quot;</span><span class="ml-1.5">&#8250;</span></a>
+</nav>
+
+  <!-- Begin Page End inject -->
+  
+  <!-- End Page End inject -->
+</article>
+
+  </main>
+  <!-- Footer -->
+<footer class="mx-auto flex lg:mt-5 max-w-3xl flex-wrap items-center px-4 py-3 text-sm opacity-60">
+  <div class="mr-auto basis-full lg:basis-1/2">
+  © <time datetime="2026">2026</time> tmullayanov
+  </div>
+  <div class="flex basis-full lg:basis-1/2 lg:justify-end">
+    <span class="mr-6 lg:ml-6">
+      <a class="link" href="https://www.getzola.org/" target="_blank">Работает на Zola</a>
+    </span>
+    <a class="link" href="https://www.getzola.org/themes/linkita/" target="_blank">&#9998; Linkita</a>
+  </div>
+  <!-- Begin Footer inject -->
+  
+  <!-- End Footer inject -->
+</footer>
+
+  
+  <link rel="stylesheet" href="https://tmullayanov.github.io/katex/katex.min.css?h=383e7b8d45a3003d6ca1" />
+  <script defer src="https://tmullayanov.github.io/katex/katex.min.js?h=5e4f3b03c66a3360fe5c"></script>
+  <script defer src="https://tmullayanov.github.io/katex/contrib/auto-render.min.js?h=bb53eb953394531aae36"></script>
+  <script>document.addEventListener("DOMContentLoaded", window.zolaTheme.katex.init);</script>
+  <!-- Mermaid -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    window.zolaTheme.mermaid.init({ mermaid, s: ".mermaid" });
+  </script>
+
+  <!-- Begin Body End inject -->
+  
+  <!-- End Body End inject -->
+</body>
+
+</html>

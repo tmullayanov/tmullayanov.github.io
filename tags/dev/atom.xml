@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ru">
+    <title>Mind Debug - dev</title>
+    <link rel="self" type="application/atom+xml" href="https://tmullayanov.github.io/tags/dev/atom.xml"/>
+    <link rel="alternate" type="text/html" href="https://tmullayanov.github.io"/>
+    <generator uri="https://www.getzola.org/">Zola</generator>
+    <updated>2026-04-07T00:00:00+00:00</updated>
+    <id>https://tmullayanov.github.io/tags/dev/atom.xml</id>
+    <entry xml:lang="ru">
+        <title>О приоритете и &quot;приоритетах&quot;</title>
+        <published>2026-04-07T00:00:00+00:00</published>
+        <updated>2026-04-07T00:00:00+00:00</updated>
+        
+        <author>
+          <name>
+            
+              tmullayanov
+            
+          </name>
+        </author>
+        
+        <link rel="alternate" type="text/html" href="https://tmullayanov.github.io/blog/priority/"/>
+        <id>https://tmullayanov.github.io/blog/priority/</id>
+        
+        <summary type="html">&lt;p&gt;Что не так с фразами в духе &quot;список приоритетов&quot;?&lt;&#x2F;p&gt;</summary>
+        
+    </entry>
+</feed>
